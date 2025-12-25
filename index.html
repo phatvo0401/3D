@@ -17,14 +17,76 @@
 
         a, button, canvas, .viewport-card { cursor: none !important; }
 
-        /* --- CURSOR (FIXED SIZE) --- */
+        /* --- CURSOR --- */
         #cursor-follower {
             width: 20px; height: 20px; border: 2px solid var(--miku); border-radius: 50%;
             position: fixed; top: 0; left: 0; pointer-events: none; z-index: 99999;
             transform: translate(-50%, -50%); background: rgba(57, 197, 187, 0.1); display: none;
         }
 
-        /* --- LOADER --- */
+        /* --- NAV LINK (BACK TO HOME - KHUNG LINE XANH) --- */
+        .nav-link {
+            transition: all 0.3s ease; 
+            padding: 8px 25px; 
+            border-radius: 9999px; 
+            border: 1px solid var(--miku); /* Khung xanh rõ nét */
+            color: #ffffff; 
+            background: transparent; 
+            font-size: 10px; 
+            font-weight: 900; 
+            letter-spacing: 2px; 
+            text-transform: uppercase;
+        }
+        .nav-link:hover { 
+            background: var(--miku); 
+            color: #050a09; 
+            box-shadow: 0 0 20px rgba(57, 197, 187, 0.4); 
+        }
+
+        /* --- CONTACT SECTION (SYNC 100% WEB CHÍNH) --- */
+        .contact-email {
+            font-size: clamp(1.5rem, 5vw, 3.5rem); /* Tự co giãn theo màn hình */
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            color: #e6f7f6;
+            transition: color 0.4s ease;
+            display: inline-block;
+        }
+        .contact-email:hover { color: var(--miku); }
+
+        .social-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .contact-social-link {
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 0.2em;
+            color: #4a5d71;
+            position: relative;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+            padding-bottom: 4px;
+        }
+
+        .contact-social-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--miku);
+            transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .contact-social-link:hover { color: var(--miku); }
+        .contact-social-link:hover::after { width: 100%; }
+
+        /* --- OTHER UI --- */
         #loader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #050a09; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -35,35 +97,12 @@
         #loader-progress { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: var(--miku); transition: width 0.2s ease; }
         .loader-percentage { font-family: monospace; font-size: 6rem; font-weight: 900; color: var(--miku); opacity: 0.15; position: absolute; bottom: 5%; right: 5%; line-height: 1; }
 
-        /* --- NAV LINK (BACK TO HOME BUTTON) --- */
-        .nav-link {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-            padding: 8px 25px; 
-            border-radius: 9999px; 
-            border: 1px solid rgba(57, 197, 187, 0.5); /* Khung line xanh mờ */
-            color: #ffffff; /* Chữ trắng mặc định */
-            background: rgba(57, 197, 187, 0.05); /* Nền xanh rất nhẹ */
-            font-size: 10px; 
-            font-weight: 900; 
-            letter-spacing: 2px; 
-            text-transform: uppercase;
-            display: inline-block;
-        }
-        .nav-link:hover { 
-            background: rgba(57, 197, 187, 0.15); 
-            color: var(--miku); /* Chữ đổi màu xanh khi hover */
-            border-color: var(--miku); /* Khung sáng lên */
-            box-shadow: 0 0 15px rgba(57, 197, 187, 0.3);
-            transform: translateY(-1px);
-        }
-
         .viewport-card {
             background: var(--glass); border: 1px solid var(--border); border-radius: 24px;
             padding: 20px; transition: all 0.4s ease; backdrop-filter: blur(12px);
         }
         .three-container { width: 100%; aspect-ratio: 1/1; background: #000; border-radius: 16px; overflow: hidden; position: relative; }
         
-        /* --- BACK TO TOP --- */
         #backToTop { 
             position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; border-radius: 50%; 
             background: rgba(57, 197, 187, 0.1); border: 1px solid var(--miku); color: var(--miku); 
@@ -72,18 +111,6 @@
         }
         #backToTop.show { opacity: 1; visibility: visible; }
         #backToTop:hover { background: var(--miku); color: #050a09; }
-
-        /* --- CONTACT SECTION SYNC --- */
-        .contact-social-link {
-            font-size: 11px; font-weight: 900; letter-spacing: 0.3em; color: #4a5d71;
-            position: relative; transition: color 0.3s ease;
-        }
-        .contact-social-link:hover { color: var(--miku); }
-        .contact-social-link::after {
-            content: ''; position: absolute; width: 0; height: 1px; bottom: -4px; left: 0;
-            background-color: var(--miku); transition: width 0.3s ease;
-        }
-        .contact-social-link:hover::after { width: 100%; }
     </style>
 </head>
 <body>
@@ -131,25 +158,25 @@
     </main>
 
     <footer id="contact" class="py-32 text-center border-t border-[#39c5bb]/10 bg-[#050a09]">
-        <h3 class="text-[12px] font-black mb-12 text-[#39c5bb] uppercase tracking-[0.4em]">Let's work together</h3>
+        <h3 class="text-[10px] font-black mb-10 text-[#39c5bb] uppercase tracking-[0.5em] opacity-80">Let's work together</h3>
         
         <div class="mb-16">
-            <a href="mailto:phatvo.0401@gmail.com" class="text-2xl md:text-4xl font-bold tracking-tighter hover:text-[#39c5bb] transition-colors duration-300">
+            <a href="mailto:phatvo.0401@gmail.com" class="contact-email">
                 phatvo.0401@gmail.com
             </a>
-            <p class="text-gray-500 text-[10px] uppercase tracking-[0.3em] mt-6 italic font-light">
+            <p class="text-gray-500 text-[9px] uppercase tracking-[0.4em] mt-8 italic font-light opacity-60">
                 038 477 2414 — CỦ CHI, TP. HỒ CHÍ MINH
             </p>
         </div>
         
-        <div class="flex flex-wrap justify-center gap-12 md:gap-24 mb-24 px-4">
+        <div class="flex flex-wrap justify-center gap-10 md:gap-16 mb-24 px-4">
             <a href="https://www.facebook.com/phatvo.0401/" target="_blank" class="contact-social-link">FACEBOOK</a>
             <a href="https://www.instagram.com/phatvo.0401/" target="_blank" class="contact-social-link">INSTAGRAM</a>
             <a href="https://www.behance.net/phtthnh42" target="_blank" class="contact-social-link">BEHANCE</a>
         </div>
         
         <div class="pt-10 border-t border-white/5 mx-10">
-            <p class="text-slate-600 text-[9px] uppercase tracking-[0.5em] leading-[2.5]">
+            <p class="text-slate-600 text-[8px] uppercase tracking-[0.6em] leading-[2.8]">
                 © 2025 VTP Design — 3D Archive Storage <br>
                 All Rights Reserved — Created by Võ Thành Phát
             </p>
@@ -159,13 +186,11 @@
     <button id="backToTop">↑</button>
 
     <script type="importmap">{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }</script>
-
     <script type="module">
         import * as THREE from 'three';
         import { STLLoader } from 'three/addons/loaders/STLLoader.js';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-        // --- MOUSE CURSOR ---
         const cursor = document.getElementById('cursor-follower');
         document.addEventListener('mousemove', (e) => {
             cursor.style.display = 'block';
@@ -173,27 +198,19 @@
             cursor.style.top = e.clientY + 'px';
         });
 
-        // --- LOADER ---
         const loaderNum = document.getElementById('loader-num');
         const loaderProgress = document.getElementById('loader-progress');
         let progress = 0;
         const loadInt = setInterval(() => {
             progress += Math.floor(Math.random() * 5) + 2;
-            if (progress >= 100) { 
-                progress = 100; clearInterval(loadInt); 
-                setTimeout(() => document.getElementById('loader').classList.add('hidden'), 500); 
-            }
+            if (progress >= 100) { progress = 100; clearInterval(loadInt); setTimeout(() => document.getElementById('loader').classList.add('hidden'), 500); }
             loaderProgress.style.width = progress + '%';
             loaderNum.innerText = progress.toString().padStart(2, '0');
         }, 60);
 
-        // --- CLOCK ---
-        function updateClock() { 
-            document.getElementById('digital-clock').innerText = new Date().toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' }).toUpperCase(); 
-        }
+        function updateClock() { document.getElementById('digital-clock').innerText = new Date().toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' }).toUpperCase(); }
         setInterval(updateClock, 1000); updateClock();
 
-        // --- 3D ENGINE ---
         const myModels = [
             { id: 'm1', name: 'Con Cụt', file: 'model.stl', desc: 'Studio Viewport / STL' },
             { id: 'm2', name: 'Con Gót', file: 'model2.stl', desc: 'Studio Viewport / STL' },
@@ -205,42 +222,29 @@
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 1000);
             camera.position.set(0, 45, 90);
-
             const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(container.clientWidth, container.clientHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             container.appendChild(renderer.domElement);
-
             const circleGrid = new THREE.PolarGridHelper(35, 16, 8, 64, 0x39c5bb, 0x111111);
-            circleGrid.position.y = -22; 
-            circleGrid.material.opacity = 0.2; circleGrid.material.transparent = true;
+            circleGrid.position.y = -22; circleGrid.material.opacity = 0.2; circleGrid.material.transparent = true;
             scene.add(circleGrid);
-
             const sun = new THREE.DirectionalLight(0x39c5bb, 2.5);
             sun.position.set(20, 50, 20);
             scene.add(sun, new THREE.AmbientLight(0xffffff, 0.6));
-
             const controls = new OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
-            controls.minDistance = 65; 
-            controls.maxDistance = 150; 
-            controls.minPolarAngle = Math.PI / 3.5; 
-            controls.maxPolarAngle = Math.PI / 2.5;
-
+            controls.minDistance = 65; controls.maxDistance = 150; 
             new STLLoader().load(path, (geo) => {
                 geo.computeBoundingBox();
                 const center = new THREE.Vector3();
                 geo.boundingBox.getCenter(center);
                 geo.translate(-center.x, -center.y, -center.z);
-
                 const mesh = new THREE.Mesh(geo, new THREE.MeshPhongMaterial({ color: 0x39c5bb, specular: 0x111111, shininess: 80 }));
                 mesh.rotation.x = -Math.PI / 2;
-                
-                const size = new THREE.Vector3(); 
-                geo.boundingBox.getSize(size);
+                const size = new THREE.Vector3(); geo.boundingBox.getSize(size);
                 const scale = 48 / Math.max(size.x, size.y, size.z);
                 mesh.scale.set(scale, scale, scale);
-                
                 scene.add(mesh);
                 function animate() { requestAnimationFrame(animate); mesh.rotation.z += 0.005; controls.update(); renderer.render(scene, camera); }
                 animate();
