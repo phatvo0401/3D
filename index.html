@@ -16,6 +16,7 @@
             cursor: none !important; 
         }
 
+        /* PC: Ẩn chuột hệ thống trên mọi thành phần */
         a, button, canvas, .viewport-card, svg, span { cursor: none !important; }
 
         #cursor-follower {
@@ -57,16 +58,17 @@
         }
         .three-container { width: 100%; aspect-ratio: 1/1; background: #000; border-radius: 16px; overflow: hidden; position: relative; }
         
-        /* BACK TO TOP: ĐÃ XÓA BỎ HOÀN TOÀN HIỆU ỨNG HOVER VÀ CLICK */
+        /* BACK TO TOP: ĐÃ CẬP NHẬT VIỀN SÁNG HƠN ĐỂ ĐỒNG BỘ VỚI WEB CHÍNH */
         #backToTop { 
             position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; border-radius: 50%; 
-            background: rgba(57, 197, 187, 0.1); border: 1px solid var(--border); color: var(--miku); 
+            background: rgba(5, 10, 9, 0.8); /* Nền tối để nổi bật viền */
+            border: 1px solid rgba(57, 197, 187, 0.6); /* Viền sáng đồng bộ web chính */
+            color: var(--miku); 
             z-index: 100; display: flex; align-items: center; justify-content: center; 
             opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; backdrop-filter: blur(10px);
             cursor: none !important; outline: none !important; -webkit-tap-highlight-color: transparent;
         }
         #backToTop.show { opacity: 1; visibility: visible; }
-        /* Không có thêm trạng thái hover hay active để giữ nút tĩnh */
 
         .social-link { display: inline-block; transition: all 0.3s ease; color: #4a5d71; letter-spacing: 0.3em; }
         .social-link:hover { color: var(--miku); text-shadow: 0 0 8px var(--miku); transform: translateY(-3px); }
