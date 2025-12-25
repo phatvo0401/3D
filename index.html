@@ -9,7 +9,7 @@
     <style>
         :root { 
             --miku: #39c5bb; 
-            --violet: #8b5cf6;
+            --violet: #8b5cf6; /* Thêm biến màu Tím Điện */
             --glass: rgba(255, 255, 255, 0.03); 
             --border: rgba(57, 197, 187, 0.2); 
         }
@@ -33,6 +33,11 @@
             display: none;
         }
 
+        @media (max-width: 768px) {
+            #cursor-follower { display: none !important; }
+            body, a, button, canvas, .viewport-card { cursor: auto !important; }
+        }
+
         #loader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #050a09; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -40,7 +45,13 @@
         }
         #loader.hidden { transform: translateY(-100%); opacity: 0; visibility: hidden; }
         .loader-bar-container { width: 150px; height: 2px; background: rgba(255, 255, 255, 0.05); position: relative; overflow: hidden; border-radius: 2px; }
-        #loader-progress { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: linear-gradient(90deg, var(--miku), var(--violet)); transition: width 0.2s ease; }
+        
+        /* 3. LOADER: Thanh tải trang chuyển sắc */
+        #loader-progress { 
+            position: absolute; left: 0; top: 0; height: 100%; width: 0%; 
+            background: linear-gradient(90deg, var(--miku), var(--violet)); 
+            transition: width 0.2s ease; 
+        }
         .loader-percentage { font-family: monospace; font-size: 6rem; font-weight: 900; color: var(--miku); opacity: 0.1; position: absolute; bottom: 5%; right: 5%; line-height: 1; }
 
         .nav-link {
@@ -52,15 +63,21 @@
         }
         .nav-link:hover { 
             color: white !important; border-color: var(--violet) !important;
-            background: linear-gradient(90deg, rgba(57, 197, 187, 0.2), rgba(139, 92, 246, 0.2));
-            box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+            background: linear-gradient(90deg, rgba(57, 197, 187, 0.1), rgba(139, 92, 246, 0.1));
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.15);
         }
 
+        /* 2. HOVER EFFECT: Viền card đổi từ xanh sang tím */
         .viewport-card {
             background: var(--glass); border: 1px solid var(--border); border-radius: 24px;
             padding: 20px; transition: all 0.4s ease; backdrop-filter: blur(12px);
         }
-        .viewport-card:hover { border-color: var(--violet); transform: translateY(-5px); }
+        .viewport-card:hover { 
+            border-color: var(--violet); 
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px -10px rgba(139, 92, 246, 0.3);
+        }
+
         .three-container { width: 100%; aspect-ratio: 1/1; background: #000; border-radius: 16px; overflow: hidden; position: relative; }
         
         #backToTop { 
@@ -76,6 +93,13 @@
         .social-link:hover { color: var(--violet); text-shadow: 0 0 8px var(--violet); transform: translateY(-3px); }
         .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* Lớp hỗ trợ Gradient Text */
+        .gradient-text {
+            background: linear-gradient(90deg, var(--miku), var(--violet));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
     </style>
 </head>
 <body>
@@ -115,11 +139,11 @@
         </div>
     </nav>
 
-    <header class="pt-64 pb-20 text-center px-4">
-        <h1 class="text-6xl md:text-8xl font-black mb-6 uppercase tracking-normal">
-            GALLERY <span class="bg-clip-text text-transparent bg-gradient-to-r from-[#39c5bb] to-[#8b5cf6]">3D</span>
+    <header class="pt-56 pb-20 text-center">
+        <h1 class="text-5xl md:text-8xl font-black mb-4 uppercase italic tracking-tighter">
+            GALLERY <span class="gradient-text">3D</span>
         </h1>
-        <p class="text-white/50 font-medium tracking-[0.5em] uppercase text-[10px] md:text-[12px]">Lưu trữ mô hình dự án cá nhân</p>
+        <p class="text-white/50 font-medium tracking-[0.5em] uppercase text-[9px] md:text-[11px]">Lưu trữ mô hình dự án cá nhân</p>
     </header>
 
     <main class="flex justify-center pb-40 px-6">
@@ -127,7 +151,7 @@
     </main>
 
     <footer id="contact" class="py-32 text-center border-t border-white/5 reveal">
-        <h3 class="text-xl font-black mb-10 bg-clip-text text-transparent bg-gradient-to-r from-[#39c5bb] to-[#8b5cf6] italic">Let's work together</h3>
+        <h3 class="text-xl font-black mb-10 gradient-text italic">Let's work together</h3>
         <p class="text-lg font-bold mb-2">phatvo.0401@gmail.com</p>
         <p class="text-gray-500 text-[11px] uppercase tracking-[0.2em] mb-12">038 477 2414 | CỦ CHI, TP. HỒ CHÍ MINH</p>
         <div class="flex justify-center gap-8 md:gap-16 mb-20 text-[10px] font-bold">
@@ -197,14 +221,15 @@
             const rotationGroup = new THREE.Group();
             scene.add(rotationGroup);
 
-            // Polar Grid
-            const circleGrid = new THREE.PolarGridHelper(35, 24, 12, 64, 0x8b5cf6, 0x111111);
+            const circleGrid = new THREE.PolarGridHelper(35, 24, 12, 64, 0x39c5bb, 0x111111);
             circleGrid.position.y = -22; 
-            circleGrid.material.opacity = 0.15; 
+            circleGrid.material.opacity = 0.2; 
             circleGrid.material.transparent = true;
             rotationGroup.add(circleGrid);
 
-            // ĐÃ BỎ HỆ THỐNG ĐÈN (No Light needed for MeshNormalMaterial)
+            const sun = new THREE.DirectionalLight(0x39c5bb, 2.5);
+            sun.position.set(20, 50, 20);
+            scene.add(sun, new THREE.AmbientLight(0xffffff, 0.6));
 
             const controls = new OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
@@ -217,8 +242,7 @@
 
             new STLLoader().load(path, (geo) => {
                 geo.center(); 
-                // Sử dụng MeshNormalMaterial: Tự hiển thị khối dựa trên vector bề mặt, không cần đèn
-                const mesh = new THREE.Mesh(geo, new THREE.MeshNormalMaterial());
+                const mesh = new THREE.Mesh(geo, new THREE.MeshPhongMaterial({ color: 0x39c5bb, specular: 0x111111, shininess: 80 }));
                 mesh.rotation.x = -Math.PI / 2;
                 
                 const box = new THREE.Box3().setFromObject(mesh);
