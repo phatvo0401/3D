@@ -15,7 +15,9 @@
             background-attachment: fixed; color: #e6f7f6; overflow-x: hidden; cursor: none !important;
         }
 
+        /* NÚT BACK TO TOP SẼ DÙNG CON TRỎ MẶC ĐỊNH */
         a, button, canvas, .viewport-card { cursor: none !important; }
+        #backToTop { cursor: auto !important; }
 
         #cursor-follower {
             width: 20px; height: 20px; border: 2px solid var(--miku); border-radius: 50%;
@@ -23,7 +25,6 @@
             transform: translate(-50%, -50%); background: rgba(57, 197, 187, 0.1); display: none;
         }
 
-        /* ẨN VÒNG TRÒN CHUỘT TRÊN MOBILE */
         @media (max-width: 768px) {
             #cursor-follower { display: none !important; }
             body, a, button, canvas, .viewport-card { cursor: auto !important; }
@@ -59,14 +60,14 @@
         }
         .three-container { width: 100%; aspect-ratio: 1/1; background: #000; border-radius: 16px; overflow: hidden; position: relative; }
         
+        /* ĐÃ LOẠI BỎ HIỆU ỨNG NÂNG CAO CHO BACK TO TOP */
         #backToTop { 
             position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; border-radius: 50%; 
-            background: rgba(57, 197, 187, 0.1); border: 1px solid var(--miku); color: var(--miku); 
+            background: #050a09; border: 1px solid var(--miku); color: var(--miku); 
             z-index: 100; display: flex; align-items: center; justify-content: center; 
-            opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(10px);
+            opacity: 0; visibility: hidden; transition: 0.3s;
         }
         #backToTop.show { opacity: 1; visibility: visible; }
-        #backToTop:hover { background: var(--miku); color: #050a09; }
 
         .social-link { display: inline-block; transition: all 0.3s ease; color: #4a5d71; letter-spacing: 0.3em; }
         .social-link:hover { color: var(--miku); text-shadow: 0 0 8px var(--miku); transform: translateY(-3px); }
@@ -144,7 +145,6 @@
 
         const cursor = document.getElementById('cursor-follower');
         document.addEventListener('mousemove', (e) => {
-            // Chỉ hiển thị vòng tròn nếu màn hình lớn hơn mobile
             if (window.innerWidth > 768) {
                 cursor.style.display = 'block';
                 cursor.style.left = e.clientX + 'px';
@@ -203,7 +203,7 @@
 
             const controls = new OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
-            controls.enablePan = false; // KHÔNG CHO PHÉP DI CHUYỂN MODEL KHỎI TÂM (FIX MOBILE ZOOM)
+            controls.enablePan = false; 
             controls.minDistance = 65; 
             controls.maxDistance = 150; 
             const fixedAngle = 0.96; 
