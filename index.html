@@ -23,7 +23,19 @@
             color: #e6f7f6; overflow-x: hidden;
         }
 
-        /* --- LOADER STYLE (Y CHANG WEB CHÍNH) --- */
+        /* --- CURSOR SYSTEM --- */
+        @media (pointer: fine) {
+            body, a, button, .viewport-card { cursor: none !important; }
+            #cursor { display: block; }
+        }
+        #cursor {
+            width: 20px; height: 20px; border: 2px solid var(--miku); border-radius: 50%;
+            position: fixed; pointer-events: none; z-index: 9999;
+            transition: transform 0.1s ease-out; transform: translate(-50%, -50%);
+            display: none;
+        }
+
+        /* --- LOADER ĐỒNG BỘ TUYỆT ĐỐI --- */
         #loader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #050a09; z-index: 10000;
@@ -33,17 +45,25 @@
         #loader.hidden { transform: translateY(-100%); opacity: 0; visibility: hidden; }
         .loader-bar-container { width: 150px; height: 2px; background: rgba(57, 197, 187, 0.1); position: relative; overflow: hidden; border-radius: 2px; }
         #loader-progress { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: var(--miku); transition: width 0.2s ease; }
-        .loader-percentage { font-family: monospace; font-size: 5rem; font-weight: 900; color: rgba(57, 197, 187, 0.15); position: absolute; bottom: 5%; right: 5%; }
+        .loader-percentage { font-family: monospace; font-size: 5rem; font-weight: 900; color: rgba(57, 197, 187, 0.3); position: absolute; bottom: 5%; right: 5%; }
 
-        /* --- UI ELEMENTS --- */
+        /* --- NAV LINK STYLE --- */
+        .nav-link {
+            transition: all 0.3s ease; padding: 6px 20px;
+            border-radius: 9999px; border: 1px solid rgba(57, 197, 187, 0.5); 
+            color: var(--miku); background: rgba(57, 197, 187, 0.1);
+            font-size: 10px; font-weight: 900; letter-spacing: 2px;
+        }
+        .nav-link:hover { background: var(--miku); color: #050a09; box-shadow: 0 0 15px var(--miku); }
+
+        /* --- 3D GRID --- */
         .miku-text { color: var(--miku); }
         .viewport-card {
             background: var(--glass); border: 1px solid var(--border); border-radius: 24px;
-            padding: 20px; transition: all 0.4s ease; backdrop-filter: blur(10px);
+            padding: 20px; transition: all 0.4s ease; backdrop-filter: blur(12px);
         }
         .viewport-card:hover { border-color: var(--miku); transform: translateY(-8px); background: rgba(57, 197, 187, 0.05); }
-        
-        .three-container { width: 100%; aspect-ratio: 1/1; background: #000; border-radius: 16px; overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.05); }
+        .three-container { width: 100%; aspect-ratio: 1/1; background: #000; border-radius: 16px; overflow: hidden; position: relative; }
         
         #backToTop { 
             position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; border-radius: 50%; 
@@ -52,12 +72,13 @@
             opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(5px);
         }
         #backToTop.show { opacity: 1; visibility: visible; }
-        
         .social-link { display: inline-block; transition: all 0.3s ease; color: #4a5d71; letter-spacing: 0.3em; }
         .social-link:hover { color: var(--miku); text-shadow: 0 0 8px var(--miku); transform: translateY(-3px); }
     </style>
 </head>
-<body>
+<body class="scroll-smooth">
+
+    <div id="cursor"></div>
 
     <div id="loader">
         <div class="flex flex-col items-center">
@@ -82,12 +103,12 @@
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#39c5bb] opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#39c5bb]"></span>
                     </div>
-                    <span class="text-[8px] font-bold uppercase tracking-widest text-gray-400">System Online</span>
+                    <span class="text-[8px] font-bold uppercase tracking-widest text-gray-400">Available</span>
                 </div>
-                <span id="digital-clock" class="text-[8px] font-mono text-gray-500 tracking-wider uppercase">00:00:00 AM</span>
+                <span id="digital-clock" class="text-[8px] font-mono text-gray-500 tracking-wider">00:00:00 AM</span>
             </div>
         </div>
-        <a href="https://[username].github.io/" class="text-[10px] font-black miku-text border border-miku/30 px-5 py-2 rounded-full hover:bg-miku hover:text-black transition-all">BACK TO HOME</a>
+        <a href="https://[username].github.io/" class="nav-link">BACK TO HOME</a>
     </nav>
 
     <header class="pt-48 pb-10 text-center">
@@ -105,12 +126,12 @@
         <p class="text-lg font-bold mb-2">phatvo.0401@gmail.com</p>
         <p class="text-gray-500 text-[11px] uppercase tracking-[0.2em] mb-12">038 477 2414 | CỦ CHI, TP. HỒ CHÍ MINH</p>
         <div class="flex justify-center gap-8 md:gap-16 mb-20 text-[10px] font-bold">
-            <a href="https://www.facebook.com/phatvo.0401/" target="_blank" class="social-link">FACEBOOK</a>
-            <a href="https://www.instagram.com/phatvo.0401/" target="_blank" class="social-link">INSTAGRAM</a>
-            <a href="https://www.behance.net/phtthnh42" target="_blank" class="social-link">BEHANCE</a>
+            <a href="#" class="social-link">FACEBOOK</a>
+            <a href="#" class="social-link">INSTAGRAM</a>
+            <a href="#" class="social-link">BEHANCE</a>
         </div>
         <div class="pt-8 border-t border-white/5">
-            <p class="text-slate-600 text-[9px] uppercase tracking-[0.5em] leading-loose">© 2025 VTP Design — 3D Archive Storage <br>All Rights Reserved — Created by Võ Thành Phát</p>
+            <p class="text-slate-600 text-[9px] uppercase tracking-[0.5em] leading-loose">© 2025 VTP Design — 3D Archive <br>All Rights Reserved — Created by Võ Thành Phát</p>
         </div>
     </footer>
 
@@ -123,42 +144,44 @@
         import { STLLoader } from 'three/addons/loaders/STLLoader.js';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-        // DANH SÁCH MODEL (Thêm model tại đây)
         const myModels = [
             { id: 'm1', name: 'Con Cụt', file: 'model.stl', desc: 'Studio Viewport / STL' },
             { id: 'm2', name: 'Con Gót', file: 'model2.stl', desc: 'Studio Viewport / STL' },
             { id: 'm3', name: 'Project 03', file: 'model.stl', desc: 'Studio Viewport / STL' }
         ];
 
-        // 1. DYNAMIC UI SCRIPTS (Clock, Loader, BackToTop)
-        function updateClock() { 
-            const now = new Date();
-            document.getElementById('digital-clock').innerText = now.toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' }).toUpperCase(); 
-        }
-        setInterval(updateClock, 1000); updateClock();
+        // --- UI LOGIC ---
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
 
         const loaderProgress = document.getElementById('loader-progress');
         const loaderNum = document.getElementById('loader-num');
-        const loader = document.getElementById('loader');
         let progress = 0;
         const loadInt = setInterval(() => {
-            progress += Math.floor(Math.random() * 10) + 2;
+            progress += Math.floor(Math.random() * 5) + 2;
             if (progress >= 100) { 
                 progress = 100; clearInterval(loadInt); 
-                setTimeout(() => loader.classList.add('hidden'), 500); 
+                setTimeout(() => document.getElementById('loader').classList.add('hidden'), 500); 
             }
             loaderProgress.style.width = progress + '%';
             loaderNum.innerText = progress.toString().padStart(2, '0');
-        }, 100);
+        }, 80);
+
+        function updateClock() { 
+            document.getElementById('digital-clock').innerText = new Date().toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' }).toUpperCase(); 
+        }
+        setInterval(updateClock, 1000); updateClock();
 
         const btt = document.getElementById('backToTop');
         window.onscroll = () => { if (window.scrollY > 500) btt.classList.add('show'); else btt.classList.remove('show'); };
         btt.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
-        // 2. 3D ENGINE
+        // --- 3D ENGINE ---
         function init3D(id, path) {
             const container = document.getElementById(id);
-            if(!container) return;
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 1000);
             camera.position.set(0, 45, 80);
@@ -168,19 +191,23 @@
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             container.appendChild(renderer.domElement);
 
+            // GRID HÌNH TRÒN DƯỚI CHÂN
+            const circleGrid = new THREE.PolarGridHelper(35, 16, 8, 64, 0x39c5bb, 0x111111);
+            circleGrid.position.y = -20; circleGrid.material.opacity = 0.2; circleGrid.material.transparent = true;
+            scene.add(circleGrid);
+
             const sun = new THREE.DirectionalLight(0x39c5bb, 2);
             sun.position.set(20, 50, 20);
             scene.add(sun, new THREE.AmbientLight(0xffffff, 0.5));
 
             const controls = new OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
-            controls.minDistance = 60; controls.maxDistance = 120;
             controls.minPolarAngle = Math.PI / 3; controls.maxPolarAngle = Math.PI / 3;
 
             new STLLoader().load(path, (geo) => {
                 geo.center();
                 const mesh = new THREE.Mesh(geo, new THREE.MeshPhongMaterial({ color: 0x39c5bb, specular: 0x111111, shininess: 80 }));
-                mesh.rotation.x = -Math.PI / 2; // Fix lỗi ngã
+                mesh.rotation.x = -Math.PI / 2;
                 geo.computeBoundingBox();
                 const size = new THREE.Vector3(); geo.boundingBox.getSize(size);
                 const scale = 45 / Math.max(size.x, size.y, size.z);
@@ -197,7 +224,6 @@
             });
         }
 
-        // Render Cards
         const grid = document.getElementById('main-grid');
         myModels.forEach(m => {
             const card = document.createElement('div');
