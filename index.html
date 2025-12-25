@@ -3,82 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VTP | 3D Archive Storage</title>
+    <title>VTP | NEON FORGE 3D</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
-        /* ĐỔI SANG TÔNG MÀU NỮ TÍNH: HỒNG & TÍM */
+        /* HỆ MÀU DỰA TRÊN ẢNH MẪU */
         :root { 
-            --miku: #ff85a2; /* Hồng chính */
-            --glass: rgba(255, 255, 255, 0.02); 
-            --border: rgba(255, 133, 162, 0.2); 
+            --neon-pink: #ff4d94; 
+            --deep-purple: #1a0b16;
+            --glass: rgba(255, 77, 148, 0.03); 
+            --border: rgba(255, 77, 148, 0.25); 
         }
         
         body { 
             font-family: 'Lexend', sans-serif; 
-            background-color: #0a0506; /* Nền tối ánh đỏ */
+            background-color: #080808; 
+            /* Hiệu ứng tia sáng dọc ở Header giống ảnh mẫu */
             background-image: 
-                radial-gradient(at 0% 0%, rgba(255, 133, 162, 0.1) 0px, transparent 50%), 
-                radial-gradient(at 100% 100%, rgba(147, 51, 234, 0.07) 0px, transparent 50%);
-            background-attachment: fixed; color: #fff0f3; overflow-x: hidden; 
+                linear-gradient(to bottom, rgba(255, 77, 148, 0.05) 1px, transparent 1px),
+                radial-gradient(at 50% 0%, rgba(255, 77, 148, 0.15) 0px, transparent 40%);
+            background-size: 100% 100%, 100% 100%;
+            background-attachment: fixed; color: #ffffff; overflow-x: hidden; 
             cursor: none !important; 
         }
 
-        a, button, canvas, .viewport-card, svg, span { cursor: none !important; }
-
+        /* TÙY CHỈNH CHUỘT NEON */
         #cursor-follower {
-            width: 20px; height: 20px; border: 2px solid var(--miku); border-radius: 50%;
+            width: 15px; height: 15px; background: var(--neon-pink); border-radius: 50%;
             position: fixed; top: 0; left: 0; pointer-events: none; z-index: 99999;
-            transform: translate(-50%, -50%); background: rgba(255, 133, 162, 0.15); display: none;
-            box-shadow: 0 0 15px rgba(255, 133, 162, 0.3);
+            transform: translate(-50%, -50%); 
+            box-shadow: 0 0 15px var(--neon-pink), 0 0 30px var(--neon-pink);
+            display: none; transition: transform 0.1s ease-out;
         }
 
-        @media (max-width: 768px) {
-            #cursor-follower { display: none !important; }
-            body, a, button, canvas, .viewport-card { cursor: auto !important; }
-        }
-
-        #loader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #0a0506; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: transform 0.8s cubic-bezier(0.85, 0, 0.15, 1), opacity 0.5s;
-        }
-        #loader.hidden { transform: translateY(-100%); opacity: 0; visibility: hidden; }
-        .loader-bar-container { width: 150px; height: 2px; background: rgba(255, 133, 162, 0.1); position: relative; overflow: hidden; border-radius: 2px; }
-        #loader-progress { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: var(--miku); transition: width 0.2s ease; }
-        .loader-percentage { font-family: monospace; font-size: 6rem; font-weight: 900; color: var(--miku); opacity: 0.15; position: absolute; bottom: 5%; right: 5%; line-height: 1; }
-
-        .nav-link {
-            transition: all 0.3s ease; padding: 6px 20px;
-            border-radius: 9999px; border: 1px solid rgba(255, 133, 162, 0.3); 
-            color: #ffffff; background: rgba(255, 133, 162, 0.05);
-            font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
-            display: inline-block;
-        }
-        .nav-link:hover { 
-            color: var(--miku) !important; border-color: var(--miku) !important;
-            background: rgba(255, 133, 162, 0.1); box-shadow: 0 0 15px rgba(255, 133, 162, 0.2);
-        }
-
-        .viewport-card {
-            background: var(--glass); border: 1px solid var(--border); border-radius: 24px;
-            padding: 20px; transition: all 0.4s ease; backdrop-filter: blur(12px);
-        }
-        .three-container { width: 100%; aspect-ratio: 1/1; background: #000; border-radius: 16px; overflow: hidden; position: relative; }
-        
+        /* NÚT BACK TO TOP (GIỮ NGUYÊN FORM CHUẨN) */
         #backToTop { 
             position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; border-radius: 50%; 
-            background: rgba(255, 133, 162, 0.1); border: 1px solid var(--border); color: var(--miku); 
+            background: #080808; border: 1px solid var(--neon-pink); color: var(--neon-pink); 
             z-index: 100; display: flex; align-items: center; justify-content: center; 
-            opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(10px);
-            cursor: none !important; outline: none !important; -webkit-tap-highlight-color: transparent;
+            opacity: 0; visibility: hidden; transition: 0.3s;
+            box-shadow: 0 0 10px rgba(255, 77, 148, 0.2);
+            cursor: none !important;
         }
         #backToTop.show { opacity: 1; visibility: visible; }
 
-        .social-link { display: inline-block; transition: all 0.3s ease; color: #714a56; letter-spacing: 0.3em; }
-        .social-link:hover { color: var(--miku); text-shadow: 0 0 8px var(--miku); transform: translateY(-3px); }
-        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
-        .reveal.active { opacity: 1; transform: translateY(0); }
+        /* LOADER */
+        #loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #080808;
+            z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: transform 0.8s cubic-bezier(0.85, 0, 0.15, 1);
+        }
+        .loader-bar { width: 200px; height: 1px; background: rgba(255, 77, 148, 0.1); position: relative; }
+        #loader-progress { position: absolute; height: 100%; background: var(--neon-pink); width: 0%; box-shadow: 0 0 10px var(--neon-pink); }
+
+        /* THIẾT KẾ CARD GIỐNG ẢNH MẪU */
+        .viewport-card {
+            background: #0d0d0d; border: 1px solid var(--border); border-radius: 30px;
+            padding: 15px; transition: all 0.4s ease; position: relative; overflow: hidden;
+        }
+        .viewport-card:hover { border-color: var(--neon-pink); box-shadow: 0 0 30px rgba(255, 77, 148, 0.15); }
+        
+        .three-container { 
+            width: 100%; aspect-ratio: 16/10; background: #050505; border-radius: 20px; 
+            overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-download {
+            background: var(--neon-pink); color: white; padding: 8px 20px; border-radius: 99px;
+            font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+            transition: 0.3s;
+        }
+        .btn-download:hover { transform: scale(1.05); box-shadow: 0 0 20px var(--neon-pink); }
+
+        @media (max-width: 768px) { #cursor-follower { display: none !important; } body { cursor: auto !important; } }
     </style>
 </head>
 <body>
@@ -86,58 +83,40 @@
     <div id="cursor-follower"></div>
 
     <div id="loader">
-        <div class="flex flex-col items-center">
-            <div class="flex items-center text-lg tracking-tighter mb-4">
-                <span class="font-black text-[#ff85a2] mr-1.5 uppercase">VTP</span>
-                <span class="font-light text-white opacity-90">3D Archive</span>
-            </div>
-            <div class="loader-bar-container"><div id="loader-progress"></div></div>
+        <div class="mb-6 flex items-center gap-2">
+            <span class="text-2xl font-black text-[#ff4d94]">NEON.</span><span class="text-2xl font-light">FORGE</span>
         </div>
-        <div id="loader-num" class="loader-percentage">00</div>
+        <div class="loader-bar"><div id="loader-progress"></div></div>
     </div>
 
-    <nav class="fixed w-full z-50 py-3 px-4 md:px-10 flex justify-between items-center bg-[#0a0506]/70 backdrop-blur-xl border-b border-white/5">
-        <div class="flex flex-col flex-shrink-0 mr-6">
-            <div class="text-md md:text-lg flex items-center tracking-tighter">
-                <span class="font-black text-[#ff85a2] mr-1.5 uppercase">VTP</span>
-                <span class="font-light text-white opacity-90">Design</span>
-            </div>
-            <div class="flex flex-col space-y-0.5 mt-1">
-                <div class="items-center space-x-1.5 hidden md:flex">
-                    <div class="relative flex h-1.5 w-1.5">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ff85a2] opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#ff85a2]"></span>
-                    </div>
-                    <span class="text-[8px] font-bold uppercase tracking-widest text-pink-300/50">Available</span>
-                </div>
-                <span id="digital-clock" class="text-[8px] font-mono text-gray-500 tracking-wider">00:00:00 AM</span>
-            </div>
+    <nav class="fixed w-full z-50 py-5 px-10 flex justify-between items-center bg-black/50 backdrop-blur-md">
+        <div class="flex items-center gap-2">
+            <span class="text-xl font-black text-[#ff4d94]">NEON.</span><span class="text-xl font-light">FORGE</span>
         </div>
-        <div class="flex items-center justify-end flex-grow">
-            <a href="https://phatvo0401.github.io/#home" class="nav-link">Back to home</a>
+        <div class="flex gap-8 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+            <a href="#" class="hover:text-[#ff4d94] transition-colors">#Showcase</a>
+            <a href="https://phatvo0401.github.io/" class="hover:text-[#ff4d94] transition-colors">Về tôi</a>
+            <a href="#" class="hover:text-[#ff4d94] transition-colors">Contact</a>
         </div>
     </nav>
 
-    <header class="pt-56 pb-20 text-center">
-        <h1 class="text-5xl md:text-8xl font-black mb-4 uppercase italic tracking-tighter text-white">GALLERY <span class="text-[#ff85a2]">3D</span></h1>
-        <p class="text-white/50 font-medium tracking-[0.5em] uppercase text-[9px] md:text-[11px]">Personal Archive Storage</p>
+    <header class="pt-60 pb-20 px-10 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+        <div>
+            <p class="text-[#ff4d94] text-[10px] font-bold uppercase tracking-[0.4em] mb-4">As in virtual</p>
+            <h1 class="text-6xl md:text-7xl font-black leading-none mb-6">CYBERNETIC<br><span class="text-[#ff4d94]">SCULPTURES</span></h1>
+            <p class="text-gray-500 text-sm max-w-sm mb-8 leading-relaxed">Tạo ra những trải nghiệm kỹ thuật số với công nghệ 3D tiên tiến nhất. Thiết kế tương lai, tối ưu trải nghiệm người dùng.</p>
+            <button class="btn-download">Tải bản Model.stl</button>
+        </div>
+        <div class="viewport-card">
+            <div class="three-container" id="hero-model"></div>
+            <p class="text-center mt-4 text-[10px] text-gray-500 uppercase tracking-widest">vitree-sport container .STL</p>
+        </div>
     </header>
 
-    <main class="flex justify-center pb-40 px-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl w-full" id="main-grid"></div>
+    <main class="max-w-7xl mx-auto px-10 pb-40">
+        <div class="mb-12"><h2 class="text-2xl font-bold uppercase italic">Showcase</h2></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="main-grid"></div>
     </main>
-
-    <footer id="contact" class="py-32 text-center border-t border-[#ff85a2]/10 reveal">
-        <h3 class="text-xl font-black mb-10 text-[#ff85a2] italic">Let's work together</h3>
-        <p class="text-lg font-bold mb-2">phatvo.0401@gmail.com</p>
-        <p class="text-gray-500 text-[11px] uppercase tracking-[0.2em] mb-12">038 477 2414 | CỦ CHI, TP. HỒ CHÍ MINH</p>
-        <div class="flex justify-center gap-8 md:gap-16 mb-20 text-[10px] font-bold">
-            <a href="https://www.facebook.com/phatvo.0401/" target="_blank" class="social-link">FACEBOOK</a>
-            <a href="https://www.instagram.com/phatvo.0401/" target="_blank" class="social-link">INSTAGRAM</a>
-            <a href="https://www.behance.net/phtthnh42" target="_blank" class="social-link">BEHANCE</a>
-        </div>
-        <div class="pt-8 border-t border-white/5"><p class="text-slate-600 text-[9px] uppercase tracking-[0.5em] leading-loose">© 2025 VTP Design — Portfolio Website <br>All Rights Reserved — Created by Võ Thành Phát</p></div>
-    </footer>
 
     <button id="backToTop">↑</button>
 
@@ -148,6 +127,7 @@
         import { STLLoader } from 'three/addons/loaders/STLLoader.js';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
+        // Custom Cursor
         const cursor = document.getElementById('cursor-follower');
         document.addEventListener('mousemove', (e) => {
             if (window.innerWidth > 768) {
@@ -157,112 +137,107 @@
             }
         });
 
-        const loaderNum = document.getElementById('loader-num');
+        // Loader
         const loaderProgress = document.getElementById('loader-progress');
-        let progress = 0;
-        const loadInt = setInterval(() => {
-            progress += Math.floor(Math.random() * 5) + 2;
-            if (progress >= 100) { 
-                progress = 100; clearInterval(loadInt); 
-                setTimeout(() => document.getElementById('loader').classList.add('hidden'), 500); 
+        let prog = 0;
+        const interval = setInterval(() => {
+            prog += Math.random() * 10;
+            if (prog >= 100) {
+                prog = 100; clearInterval(interval);
+                setTimeout(() => document.getElementById('loader').style.transform = 'translateY(-100%)', 500);
             }
-            loaderProgress.style.width = progress + '%';
-            loaderNum.innerText = progress.toString().padStart(2, '0');
-        }, 60);
-
-        function updateClock() { 
-            document.getElementById('digital-clock').innerText = new Date().toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' }).toUpperCase(); 
-        }
-        setInterval(updateClock, 1000); updateClock();
+            loaderProgress.style.width = prog + '%';
+        }, 50);
 
         const myModels = [
-            { id: 'm1', name: 'Mô Hình 01', file: 'model.stl', desc: '3D Artist: VTP' },
-            { id: 'm2', name: 'Mô Hình 02', file: 'model2.stl', desc: '3D Artist: VTP' },
-            { id: 'm3', name: 'Mô Hình 03', file: 'model.stl', desc: '3D Artist: VTP' }
+            { id: 'm1', name: 'Cyber Doll 01', file: 'model.stl' },
+            { id: 'm2', name: 'Cyber Doll 02', file: 'model.stl' },
+            { id: 'm3', name: 'Cyber Doll 03', file: 'model.stl' }
         ];
 
-        function init3D(id, path) {
+        function init3D(id, path, isWireframe = true) {
             const container = document.getElementById(id);
+            if (!container) return;
+            
             const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 1000);
-            camera.position.set(0, 55, 80);
+            const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(0, 40, 80);
 
             const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(container.clientWidth, container.clientHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setPixelRatio(window.devicePixelRatio);
             container.appendChild(renderer.domElement);
 
-            const rotationGroup = new THREE.Group();
-            scene.add(rotationGroup);
+            const group = new THREE.Group();
+            scene.add(group);
 
-            // GRID MÀU HỒNG NHẠT
-            const circleGrid = new THREE.PolarGridHelper(35, 24, 12, 64, 0xff85a2, 0x221111);
-            circleGrid.position.y = -22; 
-            circleGrid.material.opacity = 0.15; 
-            circleGrid.material.transparent = true;
-            rotationGroup.add(circleGrid);
+            // Polar Grid Neon
+            const grid = new THREE.PolarGridHelper(30, 16, 8, 64, 0xff4d94, 0x111111);
+            grid.position.y = -20;
+            grid.material.opacity = 0.3;
+            grid.material.transparent = true;
+            group.add(grid);
 
-            // ÁNH SÁNG HỒNG ẤM
-            const sun = new THREE.DirectionalLight(0xff85a2, 2);
-            sun.position.set(20, 50, 20);
-            scene.add(sun, new THREE.AmbientLight(0xffffff, 0.7));
+            // Lighting
+            const light1 = new THREE.DirectionalLight(0xff4d94, 3);
+            light1.position.set(10, 20, 10);
+            scene.add(light1);
+            scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
             const controls = new OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
-            controls.enablePan = false; 
-            controls.minDistance = 65; 
-            controls.maxDistance = 150; 
-            const fixedAngle = 0.96; 
-            controls.minPolarAngle = fixedAngle;
-            controls.maxPolarAngle = fixedAngle;
+            controls.autoRotate = true;
+            controls.autoRotateSpeed = 2;
 
             new STLLoader().load(path, (geo) => {
-                geo.center(); 
-                const mesh = new THREE.Mesh(geo, new THREE.MeshPhongMaterial({ 
-                    color: 0xff85a2, 
-                    specular: 0x221111, 
-                    shininess: 100 
-                }));
+                geo.center();
+                // Material Wireframe sáng hồng giống ảnh mẫu
+                const mat = new THREE.MeshPhongMaterial({ 
+                    color: 0xff4d94, 
+                    wireframe: true,
+                    transparent: true,
+                    opacity: 0.8,
+                    emissive: 0xff4d94,
+                    emissiveIntensity: 0.5
+                });
+                
+                const mesh = new THREE.Mesh(geo, mat);
                 mesh.rotation.x = -Math.PI / 2;
                 
                 const box = new THREE.Box3().setFromObject(mesh);
-                const size = new THREE.Vector3();
-                box.getSize(size);
-                const maxDim = Math.max(size.x, size.y, size.z);
-                const scale = 48 / maxDim;
+                const scale = 45 / Math.max(box.getSize(new THREE.Vector3()).x, box.getSize(new THREE.Vector3()).y);
                 mesh.scale.set(scale, scale, scale);
-
-                const centeredBox = new THREE.Box3().setFromObject(mesh);
-                const center = new THREE.Vector3();
-                centeredBox.getCenter(center);
-                mesh.position.sub(center);
-
-                rotationGroup.add(mesh);
                 
-                function animate() { 
-                    requestAnimationFrame(animate); 
-                    rotationGroup.rotation.y += 0.005; 
-                    controls.update(); 
-                    renderer.render(scene, camera); 
+                group.add(mesh);
+
+                function animate() {
+                    requestAnimationFrame(animate);
+                    controls.update();
+                    renderer.render(scene, camera);
                 }
                 animate();
             });
         }
 
-        const grid = document.getElementById('main-grid');
+        // Render Cards
+        const gridEl = document.getElementById('main-grid');
         myModels.forEach(m => {
-            const card = document.createElement('div');
-            card.className = 'viewport-card';
-            card.innerHTML = `<div class="three-container" id="${m.id}"></div><div class="mt-8 flex justify-between items-end"><div><h3 class="font-black text-xl uppercase tracking-tighter text-[#ff85a2]">${m.name}</h3><p class="text-[9px] text-white/40 uppercase tracking-widest mt-1">${m.desc}</p></div><div class="text-[8px] font-bold text-white/20 border border-white/10 px-3 py-1 rounded-full italic">VTP 3D</div></div>`;
-            grid.appendChild(card);
+            const div = document.createElement('div');
+            div.className = 'viewport-card';
+            div.innerHTML = `
+                <div class="three-container" id="${m.id}"></div>
+                <div class="mt-6 flex justify-between items-center">
+                    <span class="text-xs font-bold uppercase tracking-widest text-[#ff4d94]">${m.name}</span>
+                    <button class="text-[9px] border border-white/10 px-3 py-1 rounded-full hover:bg-white hover:text-black transition">View Info</button>
+                </div>
+            `;
+            gridEl.appendChild(div);
             init3D(m.id, m.file);
         });
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        init3D('hero-model', 'model.stl');
 
+        // Scroll
         const btt = document.getElementById('backToTop');
         window.onscroll = () => { if (window.scrollY > 500) btt.classList.add('show'); else btt.classList.remove('show'); };
         btt.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
