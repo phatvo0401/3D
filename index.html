@@ -186,14 +186,13 @@
             const rotationGroup = new THREE.Group();
             scene.add(rotationGroup);
 
-            // --- GRID MẬT ĐỘ CAO (GIỐNG WEB CHÍNH) ---
-            const mainGrid = new THREE.GridHelper(80, 40, 0x39c5bb, 0x111111);
+            // --- GRID CẬP NHẬT: TĂNG MẬT ĐỘ LÊN 80 Ô ---
+            const mainGrid = new THREE.GridHelper(80, 80, 0x39c5bb, 0x111111);
             mainGrid.position.y = -22;
             mainGrid.material.opacity = 0.15;
             mainGrid.material.transparent = true;
             rotationGroup.add(mainGrid);
 
-            // --- SCANNING LINE (GIỐNG WEB CHÍNH) ---
             const lineGeo = new THREE.PlaneGeometry(100, 0.5);
             const lineMat = new THREE.MeshBasicMaterial({ 
                 color: 0x39c5bb, 
@@ -203,7 +202,7 @@
             });
             const scanLine = new THREE.Mesh(lineGeo, lineMat);
             scanLine.rotation.x = Math.PI / 2;
-            scanLine.position.y = 30; // Bắt đầu từ trên cao
+            scanLine.position.y = 30;
             scene.add(scanLine);
 
             const sun = new THREE.DirectionalLight(0x39c5bb, 2.5);
@@ -241,10 +240,8 @@
                     requestAnimationFrame(animate); 
                     rotationGroup.rotation.y += 0.005; 
 
-                    // --- ANIMATE SCANNING LINE ---
                     scanLine.position.y -= 0.4;
                     if (scanLine.position.y < -25) scanLine.position.y = 35;
-                    // Làm mờ line khi ở quá cao hoặc quá thấp
                     scanLine.material.opacity = Math.sin((scanLine.position.y + 25) / 60 * Math.PI) * 0.5;
 
                     controls.update(); 
