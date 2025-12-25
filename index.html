@@ -9,13 +9,14 @@
     <style>
         :root { 
             --miku: #39c5bb; 
-            --violet: #8b5cf6; /* Thêm biến màu Tím Điện */
+            --violet: #8b5cf6;
             --glass: rgba(255, 255, 255, 0.03); 
             --border: rgba(57, 197, 187, 0.2); 
         }
         
         body { 
             font-family: 'Lexend', sans-serif; background-color: #050a09; 
+            /* BỔ SUNG MÀU TÍM VÀO NỀN CHUNG */
             background-image: 
                 radial-gradient(at 0% 0%, rgba(57, 197, 187, 0.08) 0px, transparent 50%), 
                 radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.06) 0px, transparent 50%);
@@ -33,11 +34,6 @@
             display: none;
         }
 
-        @media (max-width: 768px) {
-            #cursor-follower { display: none !important; }
-            body, a, button, canvas, .viewport-card { cursor: auto !important; }
-        }
-
         #loader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #050a09; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -45,40 +41,31 @@
         }
         #loader.hidden { transform: translateY(-100%); opacity: 0; visibility: hidden; }
         .loader-bar-container { width: 150px; height: 2px; background: rgba(255, 255, 255, 0.05); position: relative; overflow: hidden; border-radius: 2px; }
-        
-        /* 3. LOADER: Thanh tải trang chuyển sắc */
-        #loader-progress { 
-            position: absolute; left: 0; top: 0; height: 100%; width: 0%; 
-            background: linear-gradient(90deg, var(--miku), var(--violet)); 
-            transition: width 0.2s ease; 
-        }
+        #loader-progress { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: linear-gradient(90deg, var(--miku), var(--violet)); transition: width 0.2s ease; }
         .loader-percentage { font-family: monospace; font-size: 6rem; font-weight: 900; color: var(--miku); opacity: 0.1; position: absolute; bottom: 5%; right: 5%; line-height: 1; }
 
+        /* NÚT BACK TO HOME: VIỀN SÁNG HƠN */
         .nav-link {
             transition: all 0.3s ease; padding: 6px 20px;
-            border-radius: 9999px; border: 1px solid rgba(57, 197, 187, 0.3); 
-            color: #ffffff; background: rgba(255, 255, 255, 0.03);
+            border-radius: 9999px; 
+            border: 1px solid rgba(57, 197, 187, 0.6); /* Tăng từ 0.3 lên 0.6 */
+            color: #ffffff; 
+            background: rgba(57, 197, 187, 0.15); /* Tăng độ sáng nền nút */
             font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
             display: inline-block;
         }
         .nav-link:hover { 
             color: white !important; border-color: var(--violet) !important;
-            background: linear-gradient(90deg, rgba(57, 197, 187, 0.1), rgba(139, 92, 246, 0.1));
-            box-shadow: 0 0 15px rgba(139, 92, 246, 0.15);
+            background: linear-gradient(90deg, rgba(57, 197, 187, 0.2), rgba(139, 92, 246, 0.2));
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.25);
         }
 
-        /* 2. HOVER EFFECT: Viền card đổi từ xanh sang tím */
         .viewport-card {
             background: var(--glass); border: 1px solid var(--border); border-radius: 24px;
             padding: 20px; transition: all 0.4s ease; backdrop-filter: blur(12px);
         }
-        .viewport-card:hover { 
-            border-color: var(--violet); 
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px -10px rgba(139, 92, 246, 0.3);
-        }
-
-        .three-container { width: 100%; aspect-ratio: 1/1; background: #000; border-radius: 16px; overflow: hidden; position: relative; }
+        .viewport-card:hover { border-color: var(--violet); transform: translateY(-5px); }
+        .three-container { width: 100%; aspect-ratio: 1/1; background: #000; border-radius: 166px; overflow: hidden; position: relative; }
         
         #backToTop { 
             position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; border-radius: 50%; 
@@ -94,7 +81,6 @@
         .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* Lớp hỗ trợ Gradient Text */
         .gradient-text {
             background: linear-gradient(90deg, var(--miku), var(--violet));
             -webkit-background-clip: text;
@@ -140,9 +126,9 @@
     </nav>
 
     <header class="pt-56 pb-20 text-center px-4">
-        <h1 class="text-5xl md:text-8xl font-black mb-4 uppercase italic leading-tight">
-            GALLERY 
-            <span class="gradient-text pr-2 md:pr-4 inline-block not-italic">
+        <h1 class="text-5xl md:text-8xl font-black mb-4 uppercase leading-tight">
+            <span class="italic">GALLERY</span> 
+            <span class="gradient-text pr-2 md:pr-4 inline-block">
                 <span class="italic">3D</span>
             </span>
         </h1>
@@ -174,7 +160,6 @@
         import { STLLoader } from 'three/addons/loaders/STLLoader.js';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-        // CURSOR
         const cursor = document.getElementById('cursor-follower');
         document.addEventListener('mousemove', (e) => {
             if (window.innerWidth > 768) {
@@ -184,7 +169,6 @@
             }
         });
 
-        // LOADER
         const loaderNum = document.getElementById('loader-num');
         const loaderProgress = document.getElementById('loader-progress');
         let progress = 0;
@@ -292,4 +276,3 @@
     </script>
 </body>
 </html>
-
