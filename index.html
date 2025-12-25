@@ -140,6 +140,7 @@
         import { STLLoader } from 'three/addons/loaders/STLLoader.js';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
+        // --- MOUSE CURSOR ---
         const cursor = document.getElementById('cursor-follower');
         document.addEventListener('mousemove', (e) => {
             cursor.style.display = 'block';
@@ -147,6 +148,7 @@
             cursor.style.top = e.clientY + 'px';
         });
 
+        // --- LOADER ---
         const loaderNum = document.getElementById('loader-num');
         const loaderProgress = document.getElementById('loader-progress');
         let progress = 0;
@@ -160,11 +162,13 @@
             loaderNum.innerText = progress.toString().padStart(2, '0');
         }, 60);
 
+        // --- CLOCK ---
         function updateClock() { 
             document.getElementById('digital-clock').innerText = new Date().toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' }).toUpperCase(); 
         }
         setInterval(updateClock, 1000); updateClock();
 
+        // --- 3D ENGINE ---
         const myModels = [
             { id: 'm1', name: 'Con Cụt', file: 'model.stl', desc: '3D Artist: AI' },
             { id: 'm2', name: 'Con Gót', file: 'model2.stl', desc: '3D Artist: AI' },
@@ -186,24 +190,12 @@
             const rotationGroup = new THREE.Group();
             scene.add(rotationGroup);
 
-            // --- GRID CẬP NHẬT: TĂNG MẬT ĐỘ LÊN 80 Ô ---
-            const mainGrid = new THREE.GridHelper(80, 80, 0x39c5bb, 0x111111);
-            mainGrid.position.y = -22;
-            mainGrid.material.opacity = 0.15;
-            mainGrid.material.transparent = true;
-            rotationGroup.add(mainGrid);
-
-            const lineGeo = new THREE.PlaneGeometry(100, 0.5);
-            const lineMat = new THREE.MeshBasicMaterial({ 
-                color: 0x39c5bb, 
-                transparent: true, 
-                opacity: 0.5, 
-                side: THREE.DoubleSide 
-            });
-            const scanLine = new THREE.Mesh(lineGeo, lineMat);
-            scanLine.rotation.x = Math.PI / 2;
-            scanLine.position.y = 30;
-            scene.add(scanLine);
+            // --- POLAR GRID MẬT ĐỘ CAO (GIỮ NGUYÊN) ---
+            const circleGrid = new THREE.PolarGridHelper(35, 32, 20, 64, 0x39c5bb, 0x111111);
+            circleGrid.position.y = -22; 
+            circleGrid.material.opacity = 0.2; 
+            circleGrid.material.transparent = true;
+            rotationGroup.add(circleGrid);
 
             const sun = new THREE.DirectionalLight(0x39c5bb, 2.5);
             sun.position.set(20, 50, 20);
@@ -239,11 +231,6 @@
                 function animate() { 
                     requestAnimationFrame(animate); 
                     rotationGroup.rotation.y += 0.005; 
-
-                    scanLine.position.y -= 0.4;
-                    if (scanLine.position.y < -25) scanLine.position.y = 35;
-                    scanLine.material.opacity = Math.sin((scanLine.position.y + 25) / 60 * Math.PI) * 0.5;
-
                     controls.update(); 
                     renderer.render(scene, camera); 
                 }
