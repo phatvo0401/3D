@@ -21,7 +21,6 @@
                 radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.07) 0px, transparent 50%);
             background-attachment: fixed; color: #e6f7f6; overflow-x: hidden; 
             cursor: none !important; 
-            user-select: none; /* Chặn bôi đen văn bản */
         }
 
         a, button, canvas, .viewport-card, svg, span, video, img { cursor: none !important; }
@@ -70,7 +69,6 @@
         .viewport-card {
             background: var(--glass); border: 1px solid var(--border); border-radius: 24px;
             padding: 20px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(12px);
-            position: relative; overflow: hidden;
         }
         .viewport-card:hover { 
             border-color: var(--violet); 
@@ -78,13 +76,8 @@
             box-shadow: 0 15px 30px -10px rgba(139, 92, 246, 0.4);
         }
 
-        .media-container { 
-            width: 100%; aspect-ratio: 1/1; background: #000; border-radius: 16px; 
-            overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center;
-        }
-        .media-container img, .media-container video {
-            width: 100%; height: 100%; object-fit: cover;
-        }
+        .three-container { width: 100%; aspect-ratio: 1/1; background: #000; border-radius: 16px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; }
+        .three-container img, .three-container video { width: 100%; height: 100%; object-fit: cover; }
         
         #backToTop { 
             position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; border-radius: 50%; 
@@ -102,7 +95,8 @@
 
         .gradient-text {
             background: linear-gradient(90deg, var(--miku), var(--violet));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             display: inline-block;
         }
     </style>
@@ -115,7 +109,7 @@
         <div class="flex flex-col items-center">
             <div class="flex items-center text-lg tracking-tighter mb-4">
                 <span class="font-black text-[#39c5bb] mr-1.5 uppercase">VTP</span>
-                <span class="font-light text-white opacity-90">Archive</span>
+                <span class="font-light text-white opacity-90">3D Archive</span>
             </div>
             <div class="loader-bar-container"><div id="loader-progress"></div></div>
         </div>
@@ -129,6 +123,13 @@
                 <span class="font-light text-white opacity-90">Design</span>
             </div>
             <div class="flex flex-col space-y-0.5 mt-1">
+                <div class="items-center space-x-1.5 hidden md:flex">
+                    <div class="relative flex h-1.5 w-1.5">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#39c5bb] opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#39c5bb]"></span>
+                    </div>
+                    <span class="text-[8px] font-bold uppercase tracking-widest text-gray-400">Available</span>
+                </div>
                 <span id="digital-clock" class="text-[8px] font-mono text-gray-500 tracking-wider">00:00:00 AM</span>
             </div>
         </div>
@@ -142,7 +143,7 @@
             <span class="italic">GALLERY</span> 
             <span class="gradient-text pr-2 md:pr-4 italic">3D</span>
         </h1>
-        <p class="text-white/50 font-medium tracking-[0.5em] uppercase text-[9px] md:text-[11px]">Bảo mật tài liệu thiết kế cá nhân</p>
+        <p class="text-white/50 font-medium tracking-[0.5em] uppercase text-[9px] md:text-[11px]">Lưu trữ mô hình dự án cá nhân</p>
     </header>
 
     <main class="flex justify-center pb-40 px-6">
@@ -152,11 +153,13 @@
     <footer id="contact" class="py-32 text-center border-t border-white/5 reveal">
         <h3 class="text-xl font-black mb-10 gradient-text italic">Let's work together</h3>
         <p class="text-lg font-bold mb-2">phatvo.0401@gmail.com</p>
+        <p class="text-gray-500 text-[11px] uppercase tracking-[0.2em] mb-12">038 477 2414 | CỦ CHI, TP. HỒ CHÍ MINH</p>
         <div class="flex justify-center gap-8 md:gap-16 mb-20 text-[10px] font-bold">
             <a href="https://www.facebook.com/phatvo.0401/" target="_blank" class="social-link">FACEBOOK</a>
             <a href="https://www.instagram.com/phatvo.0401/" target="_blank" class="social-link">INSTAGRAM</a>
+            <a href="https://www.behance.net/phtthnh42" target="_blank" class="social-link">BEHANCE</a>
         </div>
-        <div class="pt-8 border-t border-white/5"><p class="text-slate-600 text-[9px] uppercase tracking-[0.5em]">© 2025 VTP Design — All Rights Reserved</p></div>
+        <div class="pt-8 border-t border-white/5"><p class="text-slate-600 text-[9px] uppercase tracking-[0.5em] leading-loose">© 2025 VTP Design — Portfolio Website <br>All Rights Reserved — Created by Võ Thành Phát</p></div>
     </footer>
 
     <button id="backToTop">↑</button>
@@ -168,16 +171,15 @@
         import { STLLoader } from 'three/addons/loaders/STLLoader.js';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-        // 1. MÃ HÓA TÊN FILE (Để hacker khó đoán đường dẫn thật)
-        // Lưu ý: Bạn cần đổi tên file trên folder thật khớp với "path" bên dưới
+        // DANH SÁCH FILE (Hệ thống tự nhận diện đuôi file)
         const myModels = [
-            { id: 'm1', name: 'Falcon Pose', type: 'stl', path: 'model.stl', desc: 'Mô hình 3D STL' },
-            { id: 'm2', name: 'Render 360', type: 'video', path: 'model.stl', desc: '360° Animation' },
-            { id: 'm3', name: 'Concept Art', type: 'image', path: 'avt.JPG', desc: 'Bản vẽ phác thảo' },
-            { id: 'm4', name: 'Dau Project', type: 'stl', path: 'Dau.stl', desc: 'Mô hình 3D STL' }
+            { id: 'm1', name: 'Falcon Pose', file: 'falcon_pose.stl', desc: '3D Artist: VTP' },
+            { id: 'm2', name: 'Project Video', file: 'render_360.mp4', desc: 'Render: 360 Degree' },
+            { id: 'm3', name: 'Concept Art', file: 'art_preview.jpg', desc: 'Design: Photoshop' },
+            { id: 'm4', name: 'Dau Project', file: 'Dau.stl', desc: '3D Artist: AI' }
         ];
 
-        // CURSOR & CLOCK LOGIC
+        // CURSOR
         const cursor = document.getElementById('cursor-follower');
         document.addEventListener('mousemove', (e) => {
             if (window.innerWidth > 768) {
@@ -187,24 +189,26 @@
             }
         });
 
+        // LOADER
         const loaderNum = document.getElementById('loader-num');
         const loaderProgress = document.getElementById('loader-progress');
         let progress = 0;
         const loadInt = setInterval(() => {
-            progress += Math.floor(Math.random() * 5) + 5;
+            progress += Math.floor(Math.random() * 5) + 2;
             if (progress >= 100) { 
                 progress = 100; clearInterval(loadInt); 
                 setTimeout(() => document.getElementById('loader').classList.add('hidden'), 500); 
             }
             loaderProgress.style.width = progress + '%';
             loaderNum.innerText = progress.toString().padStart(2, '0');
-        }, 50);
+        }, 60);
 
-        setInterval(() => {
+        function updateClock() { 
             document.getElementById('digital-clock').innerText = new Date().toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' }).toUpperCase(); 
-        }, 1000);
+        }
+        setInterval(updateClock, 1000); updateClock();
 
-        // 3D VIEWER FUNCTION
+        // KHÔI PHỤC CHÍNH XÁC HÀM INIT 3D GỐC
         function init3D(id, path) {
             const container = document.getElementById(id);
             const scene = new THREE.Scene();
@@ -219,14 +223,25 @@
             const rotationGroup = new THREE.Group();
             scene.add(rotationGroup);
 
+            // PolarGridHelper từ file gốc
+            const circleGrid = new THREE.PolarGridHelper(35, 24, 12, 64, 0x39c5bb, 0x111111);
+            circleGrid.position.y = -22; 
+            circleGrid.material.opacity = 0.2; 
+            circleGrid.material.transparent = true;
+            rotationGroup.add(circleGrid);
+
             const sun = new THREE.DirectionalLight(0x39c5bb, 2.5);
             sun.position.set(20, 50, 20);
             scene.add(sun, new THREE.AmbientLight(0xffffff, 0.6));
 
             const controls = new OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
-            controls.minDistance = 50;
-            controls.maxDistance = 150;
+            controls.enablePan = false; 
+            controls.minDistance = 65; 
+            controls.maxDistance = 150; 
+            const fixedAngle = 0.96; 
+            controls.minPolarAngle = fixedAngle;
+            controls.maxPolarAngle = fixedAngle;
 
             new STLLoader().load(path, (geo) => {
                 geo.center(); 
@@ -236,8 +251,14 @@
                 const box = new THREE.Box3().setFromObject(mesh);
                 const size = new THREE.Vector3();
                 box.getSize(size);
-                const scale = 45 / Math.max(size.x, size.y, size.z);
+                const maxDim = Math.max(size.x, size.y, size.z);
+                const scale = 48 / maxDim;
                 mesh.scale.set(scale, scale, scale);
+
+                const centeredBox = new THREE.Box3().setFromObject(mesh);
+                const center = new THREE.Vector3();
+                centeredBox.getCenter(center);
+                mesh.position.sub(center);
 
                 rotationGroup.add(mesh);
                 
@@ -248,38 +269,33 @@
                     renderer.render(scene, camera); 
                 }
                 animate();
-            }, undefined, (err) => {
-                container.innerHTML = `<p class="text-[9px] text-red-500">File not found</p>`;
             });
         }
 
-        // GRID RENDERER
+        // RENDER GRID VỚI LOGIC ĐA DẠNG FILE
         const grid = document.getElementById('main-grid');
         myModels.forEach(m => {
             const card = document.createElement('div');
             card.className = 'viewport-card reveal';
             
-            let mediaHtml = '';
-            if (m.type === 'stl') {
-                mediaHtml = `<div class="media-container" id="${m.id}"></div>`;
-            } else if (m.type === 'video') {
-                mediaHtml = `<div class="media-container"><video src="${m.path}" autoplay loop muted playsinline disablePictureInPicture></video></div>`;
-            } else if (m.type === 'image') {
-                mediaHtml = `<div class="media-container"><img src="${m.path}" alt="${m.name}" loading="lazy"></div>`;
+            const extension = m.file.split('.').pop().toLowerCase();
+            let viewerHtml = '';
+
+            if (extension === 'stl') {
+                viewerHtml = `<div class="three-container" id="${m.id}"></div>`;
+            } else if (['mp4', 'webm', 'mov'].includes(extension)) {
+                viewerHtml = `<div class="three-container"><video src="${m.file}" autoplay loop muted playsinline disablePictureInPicture></video></div>`;
+            } else if (['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(extension)) {
+                viewerHtml = `<div class="three-container"><img src="${m.file}" alt="${m.name}"></div>`;
             }
 
-            card.innerHTML = `
-                ${mediaHtml}
-                <div class="mt-8 flex justify-between items-end">
-                    <div>
-                        <h3 class="font-black text-xl uppercase tracking-tighter text-[#39c5bb]">${m.name}</h3>
-                        <p class="text-[9px] text-white/40 uppercase tracking-widest mt-1">${m.desc}</p>
-                    </div>
-                    <div class="text-[8px] font-bold text-white/20 border border-white/10 px-3 py-1 rounded-full italic">VTP ARCHIVE</div>
-                </div>`;
+            card.innerHTML = `${viewerHtml}<div class="mt-8 flex justify-between items-end"><div><h3 class="font-black text-xl uppercase tracking-tighter text-[#39c5bb]">${m.name}</h3><p class="text-[9px] text-white/40 uppercase tracking-widest mt-1">${m.desc}</p></div><div class="text-[8px] font-bold text-white/20 border border-white/10 px-3 py-1 rounded-full italic">VTP 3D</div></div>`;
             
             grid.appendChild(card);
-            if (m.type === 'stl') init3D(m.id, m.path);
+            
+            if (extension === 'stl') {
+                init3D(m.id, m.file);
+            }
         });
 
         // REVEAL ANIMATION
@@ -293,23 +309,14 @@
         window.onscroll = () => { if (window.scrollY > 500) btt.classList.add('show'); else btt.classList.remove('show'); };
         btt.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
     </script>
-
     <script>
-        // HỆ THỐNG PHÒNG THỦ NÂNG CAO
-        document.addEventListener('contextmenu', e => e.preventDefault());
-        
+        // Chặn chuột phải & phím tắt để an toàn hơn
+        document.addEventListener('contextmenu', event => event.preventDefault());
         document.onkeydown = function(e) {
-            // Chặn F12, Ctrl+Shift+I (Inspect), Ctrl+U (View Source), Ctrl+S (Save)
-            if (e.keyCode == 123 || 
-                (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || 
-                (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 83))) {
+            if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) {
                 return false;
             }
         }
-
-        // Chặn kéo thả ảnh/video ra ngoài để tải về
-        document.addEventListener('dragstart', e => e.preventDefault());
     </script>
 </body>
 </html>
-
