@@ -23,6 +23,12 @@
             transform: translate(-50%, -50%); background: rgba(57, 197, 187, 0.1); display: none;
         }
 
+        /* ẨN VÒNG TRÒN CHUỘT TRÊN MOBILE */
+        @media (max-width: 768px) {
+            #cursor-follower { display: none !important; }
+            body, a, button, canvas, .viewport-card { cursor: auto !important; }
+        }
+
         #loader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #050a09; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -138,9 +144,12 @@
 
         const cursor = document.getElementById('cursor-follower');
         document.addEventListener('mousemove', (e) => {
-            cursor.style.display = 'block';
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
+            // Chỉ hiển thị vòng tròn nếu màn hình lớn hơn mobile
+            if (window.innerWidth > 768) {
+                cursor.style.display = 'block';
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            }
         });
 
         const loaderNum = document.getElementById('loader-num');
@@ -194,6 +203,7 @@
 
             const controls = new OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
+            controls.enablePan = false; // KHÔNG CHO PHÉP DI CHUYỂN MODEL KHỎI TÂM (FIX MOBILE ZOOM)
             controls.minDistance = 65; 
             controls.maxDistance = 150; 
             const fixedAngle = 0.96; 
