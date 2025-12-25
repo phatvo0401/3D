@@ -115,11 +115,11 @@
         </div>
     </nav>
 
-    <header class="pt-64 pb-20 px-6 text-center w-full overflow-visible">
-        <h1 class="text-5xl md:text-8xl font-black mb-6 uppercase tracking-normal leading-tight">
+    <header class="pt-64 pb-20 text-center px-4">
+        <h1 class="text-6xl md:text-8xl font-black mb-6 uppercase tracking-normal">
             GALLERY <span class="bg-clip-text text-transparent bg-gradient-to-r from-[#39c5bb] to-[#8b5cf6]">3D</span>
         </h1>
-        <p class="text-white/50 font-medium tracking-[0.5em] uppercase text-[9px] md:text-[11px] block">Lưu trữ mô hình dự án cá nhân</p>
+        <p class="text-white/50 font-medium tracking-[0.5em] uppercase text-[10px] md:text-[12px]">Lưu trữ mô hình dự án cá nhân</p>
     </header>
 
     <main class="flex justify-center pb-40 px-6">
@@ -197,13 +197,14 @@
             const rotationGroup = new THREE.Group();
             scene.add(rotationGroup);
 
-            // BỎ HỆ THỐNG ĐÈN - SỬ DỤNG MESHNORMALMATERIAL ĐỂ TỰ HIỂN THỊ MÀU
-            const gridColor = new THREE.Color(0x8b5cf6);
-            const circleGrid = new THREE.PolarGridHelper(35, 24, 12, 64, gridColor, 0x111111);
+            // Polar Grid
+            const circleGrid = new THREE.PolarGridHelper(35, 24, 12, 64, 0x8b5cf6, 0x111111);
             circleGrid.position.y = -22; 
             circleGrid.material.opacity = 0.15; 
             circleGrid.material.transparent = true;
             rotationGroup.add(circleGrid);
+
+            // ĐÃ BỎ HỆ THỐNG ĐÈN (No Light needed for MeshNormalMaterial)
 
             const controls = new OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
@@ -216,7 +217,7 @@
 
             new STLLoader().load(path, (geo) => {
                 geo.center(); 
-                // VẬT LIỆU NORMAL: Không cần đèn, tự đổ màu theo hình khối
+                // Sử dụng MeshNormalMaterial: Tự hiển thị khối dựa trên vector bề mặt, không cần đèn
                 const mesh = new THREE.Mesh(geo, new THREE.MeshNormalMaterial());
                 mesh.rotation.x = -Math.PI / 2;
                 
