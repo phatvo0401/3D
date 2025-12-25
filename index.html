@@ -33,25 +33,19 @@
         #loader-progress { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: var(--miku); transition: width 0.2s ease; }
         .loader-percentage { font-family: monospace; font-size: 6rem; font-weight: 900; color: var(--miku); opacity: 0.15; position: absolute; bottom: 5%; right: 5%; line-height: 1; }
 
+        /* ĐỒNG BỘ NAV LINK VỚI WEB CHÍNH */
         .nav-link {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-            padding: 8px 25px; 
-            border-radius: 9999px; 
-            border: 1px solid rgba(57, 197, 187, 0.5);
-            color: #ffffff; 
-            background: rgba(57, 197, 187, 0.05); 
-            font-size: 10px; 
-            font-weight: 900; 
-            letter-spacing: 2px; 
-            text-transform: uppercase;
+            transition: all 0.3s ease; padding: 6px 20px;
+            border-radius: 9999px; border: 1px solid rgba(57, 197, 187, 0.5); 
+            color: #ffffff; background: rgba(57, 197, 187, 0.1);
+            font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
             display: inline-block;
         }
         .nav-link:hover { 
-            background: rgba(57, 197, 187, 0.15); 
-            color: var(--miku); 
-            border-color: var(--miku); 
-            box-shadow: 0 0 15px rgba(57, 197, 187, 0.3);
-            transform: translateY(-1px);
+            color: var(--miku) !important;
+            border-color: var(--miku) !important;
+            background: rgba(57, 197, 187, 0.15);
+            box-shadow: 0 0 15px rgba(57, 197, 187, 0.2);
         }
 
         .viewport-card {
@@ -61,10 +55,10 @@
         .three-container { width: 100%; aspect-ratio: 1/1; background: #000; border-radius: 16px; overflow: hidden; position: relative; }
         
         #backToTop { 
-            position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; border-radius: 50%; 
+            position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; border-radius: 50%; 
             background: rgba(57, 197, 187, 0.1); border: 1px solid var(--miku); color: var(--miku); 
             z-index: 100; display: flex; align-items: center; justify-content: center; 
-            opacity: 0; visibility: visible; transition: 0.3s; backdrop-filter: blur(10px); font-weight: bold;
+            opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(10px);
         }
         #backToTop.show { opacity: 1; visibility: visible; }
         #backToTop:hover { background: var(--miku); color: #050a09; }
@@ -90,14 +84,14 @@
         <div id="loader-num" class="loader-percentage">00</div>
     </div>
 
-    <nav class="fixed w-full z-50 py-4 px-6 md:px-10 flex justify-between items-center bg-[#050a09]/70 backdrop-blur-xl border-b border-white/5">
-        <div class="flex flex-col">
+    <nav class="fixed w-full z-50 py-3 px-4 md:px-10 flex justify-between items-center bg-[#050a09]/70 backdrop-blur-xl border-b border-white/5">
+        <div class="flex flex-col flex-shrink-0 mr-6">
             <div class="text-md md:text-lg flex items-center tracking-tighter">
                 <span class="font-black text-[#39c5bb] mr-1.5 uppercase">VTP</span>
                 <span class="font-light text-white opacity-90">Design</span>
             </div>
-            <div class="flex flex-col space-y-1 mt-1">
-                <div class="items-center space-x-1.5 flex">
+            <div class="flex flex-col space-y-0.5 mt-1">
+                <div class="items-center space-x-1.5 hidden md:flex">
                     <div class="relative flex h-1.5 w-1.5">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#39c5bb] opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#39c5bb]"></span>
@@ -107,7 +101,10 @@
                 <span id="digital-clock" class="text-[8px] font-mono text-gray-500 tracking-wider">00:00:00 AM</span>
             </div>
         </div>
-        <a href="https://phatvo0401.github.io/#home" class="nav-link">Back to home</a>
+        
+        <div class="flex items-center justify-end flex-grow">
+            <a href="https://phatvo0401.github.io/#home" class="nav-link">Back to home</a>
+        </div>
     </nav>
 
     <header class="pt-56 pb-20 text-center">
@@ -186,7 +183,6 @@
             const rotationGroup = new THREE.Group();
             scene.add(rotationGroup);
 
-            // --- ĐIỀU CHỈNH GRID: 24 đường quạt, 12 vòng tròn ---
             const circleGrid = new THREE.PolarGridHelper(35, 24, 12, 64, 0x39c5bb, 0x111111);
             circleGrid.position.y = -22; 
             circleGrid.material.opacity = 0.2; 
@@ -254,4 +250,3 @@
     </script>
 </body>
 </html>
-
