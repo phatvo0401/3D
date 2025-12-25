@@ -22,6 +22,9 @@
                 radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.07) 0px, transparent 50%);
             background-attachment: fixed; color: #e6f7f6; overflow-x: hidden; 
             cursor: none !important; 
+            /* CHẶN BÔI ĐEN CHỮ TOÀN TRANG */
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         a, button, canvas, .viewport-card, svg, span { cursor: none !important; }
@@ -294,21 +297,26 @@
         btt.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
     </script>
     <script>
-    // Chặn chuột phải
+    // 1. Chặn chuột phải (Toàn diện)
     document.addEventListener('contextmenu', event => event.preventDefault());
 
-    // Chặn các phím tắt F12, Ctrl+Shift+I, v.v.
+    // 2. Chặn các phím tắt nhà phát triển (DevTools, View Source)
     document.onkeydown = function(e) {
-        if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73)) {
+        if (
+            e.keyCode == 123 || // F12
+            (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || // Ctrl+Shift+I hoặc J
+            (e.ctrlKey && e.keyCode == 85) // Ctrl+U (View Source)
+        ) {
             return false;
         }
-    }
+    };
+
+    // 3. Chặn kéo thả hình ảnh/canvas (Ngăn việc nắm kéo ảnh ra desktop để lưu)
+    document.addEventListener('dragstart', event => event.preventDefault());
+
+    // 4. Chặn phím tắt Copy (Ctrl+C, Ctrl+X)
+    document.addEventListener('copy', event => event.preventDefault());
+    document.addEventListener('cut', event => event.preventDefault());
 </script>
 </body>
 </html>
-
-
-
-
-
-
