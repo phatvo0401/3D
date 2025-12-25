@@ -17,11 +17,11 @@
 
         a, button, canvas, .viewport-card { cursor: none !important; }
 
-        /* --- CURSOR --- */
+        /* --- CURSOR FIXED --- */
         #cursor-follower {
             width: 20px; height: 20px; border: 2px solid var(--miku); border-radius: 50%;
             position: fixed; top: 0; left: 0; pointer-events: none; z-index: 99999;
-            transition: transform 0.1s ease-out, background 0.3s; transform: translate(-50%, -50%);
+            transition: transform 0.15s ease-out, background 0.3s; transform: translate(-50%, -50%);
             background: rgba(57, 197, 187, 0.1); display: none;
         }
 
@@ -143,9 +143,14 @@
         });
 
         function attachHover() {
-            document.querySelectorAll('a, button, .viewport-card').forEach(t => {
+            // Chỉ áp dụng hiệu ứng phóng to cho các link và nút (A, BUTTON)
+            document.querySelectorAll('a, button').forEach(t => {
                 t.onmouseenter = () => cursor.style.transform = 'translate(-50%, -50%) scale(2.8)';
                 t.onmouseleave = () => cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+            });
+            // Card model giữ nguyên kích thước con trỏ
+            document.querySelectorAll('.viewport-card').forEach(t => {
+                t.onmouseenter = () => cursor.style.transform = 'translate(-50%, -50%) scale(1)';
             });
         }
 
@@ -201,25 +206,20 @@
 
             const controls = new OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
-            
-            // GIỚI HẠN THU PHÓNG (Zoom limits)
             controls.minDistance = 65; 
             controls.maxDistance = 150; 
-            
             controls.minPolarAngle = Math.PI / 3.5; 
             controls.maxPolarAngle = Math.PI / 2.5;
 
             new STLLoader().load(path, (geo) => {
-                // TỰ ĐỘNG CĂN GIỮA TUYỆT ĐỐI
                 geo.computeBoundingBox();
                 const center = new THREE.Vector3();
                 geo.boundingBox.getCenter(center);
-                geo.translate(-center.x, -center.y, -center.z); // Di chuyển trọng tâm về 0,0,0
+                geo.translate(-center.x, -center.y, -center.z);
 
                 const mesh = new THREE.Mesh(geo, new THREE.MeshPhongMaterial({ color: 0x39c5bb, specular: 0x111111, shininess: 80 }));
-                mesh.rotation.x = -Math.PI / 2; // Xoay model cho đứng
+                mesh.rotation.x = -Math.PI / 2;
                 
-                // Scale để vừa khung hình
                 const size = new THREE.Vector3(); 
                 geo.boundingBox.getSize(size);
                 const scale = 48 / Math.max(size.x, size.y, size.z);
