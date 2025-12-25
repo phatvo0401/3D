@@ -16,6 +16,7 @@
         
         body { 
             font-family: 'Lexend', sans-serif; background-color: #050a09; 
+            /* KẾT HỢP XANH MIKU VÀ TÍM ĐIỆN VÀO NỀN */
             background-image: 
                 radial-gradient(at 0% 0%, rgba(57, 197, 187, 0.1) 0px, transparent 50%), 
                 radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.07) 0px, transparent 50%);
@@ -23,7 +24,7 @@
             cursor: none !important; 
         }
 
-        a, button, canvas, .viewport-card, svg, span, video, img { cursor: none !important; }
+        a, button, canvas, .viewport-card, svg, span { cursor: none !important; }
 
         #cursor-follower {
             width: 20px; height: 20px; border: 2px solid var(--miku); border-radius: 50%;
@@ -46,6 +47,7 @@
         #loader.hidden { transform: translateY(-100%); opacity: 0; visibility: hidden; }
         .loader-bar-container { width: 150px; height: 2px; background: rgba(255, 255, 255, 0.05); position: relative; overflow: hidden; border-radius: 2px; }
         
+        /* LOADER: Chuyển sắc Xanh - Tím */
         #loader-progress { 
             position: absolute; left: 0; top: 0; height: 100%; width: 0%; 
             background: linear-gradient(90deg, var(--miku), var(--violet)); 
@@ -53,6 +55,7 @@
         }
         .loader-percentage { font-family: monospace; font-size: 6rem; font-weight: 900; color: var(--miku); opacity: 0.1; position: absolute; bottom: 5%; right: 5%; line-height: 1; }
 
+        /* NAV LINK: Viền sáng hơn và hiệu ứng hover tím */
         .nav-link {
             transition: all 0.3s ease; padding: 6px 20px;
             border-radius: 9999px; border: 1px solid rgba(57, 197, 187, 0.6); 
@@ -66,6 +69,7 @@
             box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
         }
 
+        /* CARD HOVER EFFECT: Viền đổi sang tím rực rỡ */
         .viewport-card {
             background: var(--glass); border: 1px solid var(--border); border-radius: 24px;
             padding: 20px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(12px);
@@ -76,8 +80,7 @@
             box-shadow: 0 15px 30px -10px rgba(139, 92, 246, 0.4);
         }
 
-        .three-container { width: 100%; aspect-ratio: 1/1; background: #000; border-radius: 16px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; }
-        .three-container img, .three-container video { width: 100%; height: 100%; object-fit: cover; }
+        .three-container { width: 100%; aspect-ratio: 1/1; background: #000; border-radius: 16px; overflow: hidden; position: relative; }
         
         #backToTop { 
             position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; border-radius: 50%; 
@@ -93,6 +96,7 @@
         .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
+        /* GRADIENT TEXT: Style dùng cho Header và Footer */
         .gradient-text {
             background: linear-gradient(90deg, var(--miku), var(--violet));
             -webkit-background-clip: text;
@@ -141,7 +145,9 @@
     <header class="pt-56 pb-20 text-center px-4">
         <h1 class="text-5xl md:text-8xl font-black mb-4 uppercase leading-tight tracking-tighter">
             <span class="italic">GALLERY</span> 
-            <span class="gradient-text pr-2 md:pr-4 italic">3D</span>
+            <span class="gradient-text pr-2 md:pr-4">
+                <span class="italic">3D</span>
+            </span>
         </h1>
         <p class="text-white/50 font-medium tracking-[0.5em] uppercase text-[9px] md:text-[11px]">Lưu trữ mô hình dự án cá nhân</p>
     </header>
@@ -171,16 +177,6 @@
         import { STLLoader } from 'three/addons/loaders/STLLoader.js';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-        // DANH SÁCH FILE (Hệ thống tự nhận diện đuôi file)
-        const myModels = [
-            { id: 'm1', name: 'Falcon Pose', file: 'avt.JPG', desc: '3D Artist: VTP' },
-            { id: 'm2', name: 'Project Video', file: 'model.stl', desc: '3D Artist:....' }
-        ];' },
-            { id: 'm3', name: 'Concept Art', file: 'model2.stl', desc: '3D Artist:....' }
-        ];' },
-            { id: 'm4', name: 'Dau Project', file: 'Dau.stl', desc: '3D Artist:....' }
-        ];
-
         // CURSOR
         const cursor = document.getElementById('cursor-follower');
         document.addEventListener('mousemove', (e) => {
@@ -191,7 +187,7 @@
             }
         });
 
-        // LOADER
+        // LOADER LOGIC
         const loaderNum = document.getElementById('loader-num');
         const loaderProgress = document.getElementById('loader-progress');
         let progress = 0;
@@ -210,7 +206,13 @@
         }
         setInterval(updateClock, 1000); updateClock();
 
-        // KHÔI PHỤC CHÍNH XÁC HÀM INIT 3D GỐC
+        const myModels = [
+            { id: 'm1', name: 'Con Cụt', file: 'model.stl', desc: '3D Artist: AI' },
+            { id: 'm2', name: 'Con Gót', file: 'model2.stl', desc: '3D Artist: AI' },
+            { id: 'm3', name: 'Project 03', file: 'Dau.stl', desc: '3D Artist: AI' },
+            { id: 'm4', name: 'Project 04', file: 'model.stl', desc: '3D Artist: AI' }
+        ];
+
         function init3D(id, path) {
             const container = document.getElementById(id);
             const scene = new THREE.Scene();
@@ -225,7 +227,6 @@
             const rotationGroup = new THREE.Group();
             scene.add(rotationGroup);
 
-            // PolarGridHelper từ file gốc
             const circleGrid = new THREE.PolarGridHelper(35, 24, 12, 64, 0x39c5bb, 0x111111);
             circleGrid.position.y = -22; 
             circleGrid.material.opacity = 0.2; 
@@ -274,52 +275,40 @@
             });
         }
 
-        // RENDER GRID VỚI LOGIC ĐA DẠNG FILE
         const grid = document.getElementById('main-grid');
         myModels.forEach(m => {
             const card = document.createElement('div');
-            card.className = 'viewport-card reveal';
-            
-            const extension = m.file.split('.').pop().toLowerCase();
-            let viewerHtml = '';
-
-            if (extension === 'stl') {
-                viewerHtml = `<div class="three-container" id="${m.id}"></div>`;
-            } else if (['mp4', 'webm', 'mov'].includes(extension)) {
-                viewerHtml = `<div class="three-container"><video src="${m.file}" autoplay loop muted playsinline disablePictureInPicture></video></div>`;
-            } else if (['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(extension)) {
-                viewerHtml = `<div class="three-container"><img src="${m.file}" alt="${m.name}"></div>`;
-            }
-
-            card.innerHTML = `${viewerHtml}<div class="mt-8 flex justify-between items-end"><div><h3 class="font-black text-xl uppercase tracking-tighter text-[#39c5bb]">${m.name}</h3><p class="text-[9px] text-white/40 uppercase tracking-widest mt-1">${m.desc}</p></div><div class="text-[8px] font-bold text-white/20 border border-white/10 px-3 py-1 rounded-full italic">VTP 3D</div></div>`;
-            
+            card.className = 'viewport-card';
+            card.innerHTML = `<div class="three-container" id="${m.id}"></div><div class="mt-8 flex justify-between items-end"><div><h3 class="font-black text-xl uppercase tracking-tighter text-[#39c5bb]">${m.name}</h3><p class="text-[9px] text-white/40 uppercase tracking-widest mt-1">${m.desc}</p></div><div class="text-[8px] font-bold text-white/20 border border-white/10 px-3 py-1 rounded-full italic">VTP 3D</div></div>`;
             grid.appendChild(card);
-            
-            if (extension === 'stl') {
-                init3D(m.id, m.file);
-            }
+            init3D(m.id, m.file);
         });
 
-        // REVEAL ANIMATION
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
         }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // BACK TO TOP
         const btt = document.getElementById('backToTop');
         window.onscroll = () => { if (window.scrollY > 500) btt.classList.add('show'); else btt.classList.remove('show'); };
         btt.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
     </script>
     <script>
-        // Chặn chuột phải & phím tắt để an toàn hơn
-        document.addEventListener('contextmenu', event => event.preventDefault());
-        document.onkeydown = function(e) {
-            if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) {
-                return false;
-            }
+    // Chặn chuột phải
+    document.addEventListener('contextmenu', event => event.preventDefault());
+
+    // Chặn các phím tắt F12, Ctrl+Shift+I, v.v.
+    document.onkeydown = function(e) {
+        if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73)) {
+            return false;
         }
-    </script>
+    }
+</script>
 </body>
 </html>
+
+
+
+
+
 
