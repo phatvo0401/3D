@@ -76,6 +76,18 @@
     font-style: italic;
 }
 
+/* Chỉnh sửa riêng cho dòng Let's work together */
+.contact-title-gradient {
+    background: linear-gradient(90deg, var(--miku), var(--violet));
+    -webkit-background-clip: text; /* Cắt nền theo khung chữ */
+    -webkit-text-fill-color: transparent; /* Làm trong suốt màu chữ gốc để lộ nền gradient */
+    display: inline-block;
+    font-style: italic;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+        
         /* TRANSFORM TOOLS */
         .transform-controls { position: absolute; top: 20px; right: 20px; display: flex; gap: 8px; z-index: 10; opacity: 0; visibility: hidden; transition: 0.3s; }
         .viewport-box:hover .transform-controls { opacity: 1; visibility: visible; }
@@ -209,7 +221,7 @@
     </main>
 
     <footer id="contact" class="py-32 text-center border-t border-[#39c5bb]/10 reveal">
-    <h3 class="text-xl font-black mb-10 miku-text-italic">Let's work together</h3>
+    <h3 class="text-xl mb-10 contact-title-gradient">Let's work together</h3>
     <p class="text-lg font-bold mb-2 text-white">phatvo.0401@gmail.com</p>
     <p class="text-gray-500 text-[11px] uppercase tracking-[0.2em] mb-12">038 477 2414 | CỦ CHI, TP. HỒ CHÍ MINH</p>
     
@@ -371,4 +383,5 @@ document.addEventListener('DOMContentLoaded', () => {
     </script>
 </body>
 </html>
+
 
