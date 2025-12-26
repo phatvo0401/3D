@@ -40,7 +40,7 @@
         .scan-line { position: absolute; width: 100%; height: 1px; background: var(--miku); opacity: 0.1; top: 0; animation: scanMove 3s linear infinite; pointer-events: none; }
         @keyframes scanMove { 0% { top: 0%; } 100% { top: 100%; } }
 
-        .three-container { width: 100%; aspect-ratio: 1/1; background: #000; border-radius: 16px; overflow: hidden; }
+        .three-container { width: 100%; aspect-ratio: 1/1; background: #000; border-radius: 16px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .media-content { width: 100%; height: 100%; object-fit: cover; border-radius: 16px; }
         
         #backToTop { position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; border-radius: 50%; background: rgba(57, 197, 187, 0.1); border: 1px solid var(--border); color: var(--miku); z-index: 100; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(10px); }
@@ -136,12 +136,15 @@
             group.add(grid);
         };
 
-        // GALLERY (image,stl.video)
-        const myModels = [{ id: 'm1', name: 'Dự án', file: 'avt.JPG', type: 'image' }, 
-                          { id: 'm2', name: 'Con Cụt', file: 'model.stl', type: 'stl' }, 
-                          { id: 'm3', name: 'Con Gót', file: 'model2.stl', type: 'stl' },
-                          { id: 'm4', name: 'Con Gót', file: 'Demo.mp4', type: 'video' }
-                         ];
+        // GALLERY CONFIGURATION (image,video,stl)
+        // Thêm type: 'video' để trình chiếu video
+        const myModels = [
+            { id: 'm1', name: 'Hình Dự án', file: 'avt.JPG', type: 'image' }, 
+            { id: 'm2', name: 'Con Cụt', file: 'model.stl', type: 'stl' }, 
+            { id: 'm3', name: 'Con Gót', file: 'model2.stl', type: 'stl' },
+            { id: 'm4', name: 'Dự án video (Demo)', file: 'Demo.mp4', type: 'video' }
+        ];
+
         function initGallery3D(id, path) {
             const container = document.getElementById(id); if(!container) return;
             const scene = new THREE.Scene();
@@ -157,7 +160,6 @@
             new STLLoader().load(path, (geo) => {
                 const mesh = new THREE.Mesh(geo, getMikuMaterial()); geo.center();
                 const size = new THREE.Vector3(); new THREE.Box3().setFromObject(mesh).getSize(size);
-                // ĐỒNG BỘ: Sử dụng scale 50 giống phần upload để chất lượng hiển thị to rõ hơn
                 const scale = 50 / Math.max(size.x, size.y, size.z); mesh.scale.set(scale, scale, scale);
                 mesh.rotation.x = -Math.PI / 2; group.add(mesh);
                 const anim = () => { requestAnimationFrame(anim); group.rotation.y += 0.005; controls.update(); renderer.render(scene, camera); }; anim();
@@ -198,12 +200,23 @@
             reader.readAsArrayBuffer(file);
         };
 
+        // RENDER GRID
         const gridEl = document.getElementById('main-grid');
         myModels.forEach(m => {
             const card = document.createElement('div'); card.className = 'viewport-card';
-            card.innerHTML = m.type === 'stl' ? `<div class="three-container" id="${m.id}"></div>` : `<div class="three-container"><img src="${m.file}" class="media-content"></div>`;
-            card.innerHTML += `<div class="mt-8"><h3 class="font-black text-xl uppercase tracking-tighter text-[#39c5bb]">${m.name}</h3><p class="text-[8px] font-bold text-white/20 uppercase tracking-widest mt-1">VTP ARCHIVE</p></div>`;
-            gridEl.appendChild(card); if(m.type === 'stl') initGallery3D(m.id, m.file);
+            let mediaHTML = '';
+            
+            if(m.type === 'stl') {
+                mediaHTML = `<div class="three-container" id="${m.id}"></div>`;
+            } else if(m.type === 'video') {
+                mediaHTML = `<div class="three-container"><video src="${m.file}" class="media-content" autoplay loop muted playsinline></video></div>`;
+            } else {
+                mediaHTML = `<div class="three-container"><img src="${m.file}" class="media-content"></div>`;
+            }
+
+            card.innerHTML = mediaHTML + `<div class="mt-8"><h3 class="font-black text-xl uppercase tracking-tighter text-[#39c5bb]">${m.name}</h3><p class="text-[8px] font-bold text-white/20 uppercase tracking-widest mt-1">VTP ARCHIVE</p></div>`;
+            gridEl.appendChild(card); 
+            if(m.type === 'stl') initGallery3D(m.id, m.file);
         });
 
         const btt = document.getElementById('backToTop');
@@ -214,4 +227,3 @@
     </script>
 </body>
 </html>
-
