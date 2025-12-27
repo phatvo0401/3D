@@ -267,10 +267,10 @@
 
         // GALLERY CONFIGURATION
         const myModels = [
-            { id: 'm1', name: 'Hình Dự án', file: 'avt.JPG', type: 'image' }, 
-            { id: 'm2', name: 'Con Cụt', file: 'model.stl', type: 'stl' }, 
-            { id: 'm3', name: 'Con Gót', file: 'model2.stl', type: 'stl' },
-            { id: 'm4', name: 'Dự án video (Demo)', file: 'Demo.mp4', type: 'video' }
+            { id: 'm1', name: 'Hình Dự án', file: 'avt.JPG', type: 'image', author: 'Võ Thành Phát' }, 
+            { id: 'm2', name: 'Con Cụt', file: 'model.stl', type: 'stl', author: 'Võ Thành Phát' }, 
+            { id: 'm3', name: 'Con Gót', file: 'model2.stl', type: 'stl', author: 'Võ Thành Phát' },
+            { id: 'm4', name: 'Dự án video (Demo)', file: 'Demo.mp4', type: 'video', author: 'Võ Thành Phát' }
         ];
 
         function initGallery3D(id, path) {
@@ -370,7 +370,13 @@ document.addEventListener('DOMContentLoaded', () => {
                            (m.type === 'video' ? `<div class="three-container"><video src="${m.file}" class="media-content" autoplay loop muted playsinline></video></div>` : 
                            `<div class="three-container"><img src="${m.file}" class="media-content"></div>`);
 
-            card.innerHTML = mediaHTML + `<div class="mt-8"><h3 class="font-black text-xl uppercase tracking-tighter text-[#39c5bb]">${m.name}</h3><p class="text-[8px] font-bold text-white/20 uppercase tracking-widest mt-1">3D Artist:</p></div>`;
+            card.innerHTML = mediaHTML + `
+    <div class="mt-8">
+        <h3 class="font-black text-xl uppercase tracking-tighter text-[#39c5bb]">${m.name}</h3>
+        <p class="text-[8px] font-bold text-white/20 uppercase tracking-widest mt-1">
+            3D Artist: <span class="text-white/60">${m.author || "Unknown"}</span>
+        </p>
+    </div>`;
             gridEl.appendChild(card); 
             if(m.type === 'stl') initGallery3D(m.id, m.file);
         });
@@ -383,6 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
     </script>
 </body>
 </html>
+
 
 
 
