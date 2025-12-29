@@ -281,12 +281,12 @@ scene.add(sideLight);
             group.add(grid);
         };
 
-        // GALLERY CONFIGURATION
+        // GALLERY CONFIGURATION. video image stl
         const myModels = [
-            { id: 'm1', name: 'Hình Dự án', file: 'avt.JPG', type: 'image', author: 'Võ Thành Phát' }, 
-            { id: 'm2', name: 'Con Cụt', file: 'model.stl', type: 'stl', author: 'Võ Thành Phát' }, 
-            { id: 'm3', name: 'Con Gót', file: 'model2.stl', type: 'stl', author: 'Võ Thành Phát' },
-            { id: 'm4', name: 'Mastodon Dinozord', file: '1229.mp4', type: 'video', author: 'Tiên Tiên' }
+            { id: 'm1', name: 'Hình Dự án', file: 'avt.JPG', type: 'image', author: 'Tiên Tiên', copyright: 'Gaoogao.com Shop' }, 
+            { id: 'm2', name: 'Con Cụt', file: 'model.stl', type: 'stl', author: 'Tiên Tiên', copyright: 'Gaoogao.com Shop' }, 
+            { id: 'm3', name: 'Con Gót', file: 'model2.stl', type: 'stl', author: 'Tiên Tiên', copyright: 'Gaoogao.com Shop' },
+            { id: 'm4', name: 'Mastodon Dinozord', file: '1229.mp4', type: 'video', author: 'Tiên Tiên', copyright: 'Gaoogao.com Shop' }
         ];
 
         function initGallery3D(id, path) {
@@ -387,10 +387,13 @@ document.addEventListener('DOMContentLoaded', () => {
                            `<div class="three-container"><img src="${m.file}" class="media-content"></div>`);
 
             card.innerHTML = mediaHTML + `
+    card.innerHTML = mediaHTML + `
     <div class="mt-8">
         <h3 class="font-black text-xl uppercase tracking-tighter text-[#39c5bb]">${m.name}</h3>
         <p class="text-[8px] font-bold text-white/20 uppercase tracking-widest mt-1">
-            3D Artist: <span class="text-white/60">${m.author || "Unknown"}</span>
+            3D Artist: <span class="text-white/60">${m.author || "VTP"}</span>
+            <br>
+            Copyright: <span class="text-white/40">${m.copyright || "None"}</span>
         </p>
     </div>`;
             gridEl.appendChild(card); 
@@ -405,6 +408,7 @@ document.addEventListener('DOMContentLoaded', () => {
     </script>
 </body>
 </html>
+
 
 
 
